@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel ="stylesheet" href="css/bootstrap.css"/>
+        <link rel ="stylesheet" href="css/bootstrap-responsive.css"/>
+        <link rel="stylesheet" href="amanda/cloud.css" type="text/css" />
+        <script type="text/javascript" src="amanda/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="amanda/jquery.tagcloud-2.js"></script>
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Day');
+                data.addColumn('number', 'Average Notes');
+                data.addColumn('number', 'Average Wordcount');
+                data.addRows([
+                    ['M', 1000, 400],
+                    ['T', 1170, 460],
+                    ['W', 660, 1120],
+                    ['Th', 1030, 540],
+                    ['F', 750, 350],
+                    ['Sa', 930, 250],
+                    ['Su', 230, 640],
+                ]);
+
+                var options = {
+                    title: 'Weekly note statistics',
+                    hAxis: {title: 'Days', titleTextStyle: {color: 'purple'}}
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+                chart.draw(data, options);
+            }
+        </script>
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+                padding-right: auto;
+                padding-left: auto;
+            }
+        </style>
+        <title>Evernote Analytics</title>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="container" style="background: #000000">
+                <a class="brand" style="margin-left: 20px">Analysis of Notes</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active" style="margin-top: 12px">
+                            Log out
+                        </li>
+                    </ul>
+                </div>
+            </div>	
+        </div>
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span12" style="background: #ffffff">
+                    <h2>Average post per day</h2>
+                    <div id="chart"></div>
+                </div>
+                <!-- <div class="span2" style="background: #aabbff">Options</div> !-->
+            </div>
+
+            <div class="row" style="">
+                <div class="span6" style="text-align: right">
+                    <h2>Tag cloud of tags</h2>
+                    <div id="tagcloud"></div>
+                    <script type="text/javascript">
+                        var tags = [{tag: "computers", count: 56}, {tag: "mobile" , count :35},{tag: "andrew" , count :83}
+                            ,{tag: "javarocks" , count :12},{tag: "coffee" , count :45},{tag: "metaball" , count :120},{tag: "matt", count :3},{tag: "amanda", count:10},{tag: "baturay", count:15},{tag: "computers", count: 56}, {tag: "mobile" , count :35},{tag: "andrew" , count :83}
+                            ,{tag: "javarocks" , count :12},{tag: "coffee" , count :45},{tag: "metaball" , count :120},{tag: "matt", count :3},{tag: "amanda", count:10},{tag: "baturay", count:15} ];
+                        $("#tagcloud").tagCloud(tags);
+                        var children = document.getElementById('tagcloud').childNodes;
+                        for (var i=0; i<children.length; i=i+2)
+                        {
+                            console.log(children)
+                            children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+                        }
+                    </script>
+
+                </div>
+                <div class="span6" >
+                    <h2>Tag cloud of notebooks</h2>
+                    <div id="tagcloud2"></div>
+                    <script type="text/javascript">
+                        var tags = [{tag: "computers", count: 56}, {tag: "mobile" , count :35},{tag: "andrew" , count :83}
+                            ,{tag: "javarocks" , count :12},{tag: "coffee" , count :45},{tag: "metaball" , count :120} ];
+                        $("#tagcloud2").tagCloud(tags);
+			
+                        var children = document.getElementById('tagcloud').childNodes;
+                        for (var i=0; i<children.length; i=i+2)
+                        {
+                            console.log(children)
+                            children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+                        }
+                    </script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body> 
+
+</html>

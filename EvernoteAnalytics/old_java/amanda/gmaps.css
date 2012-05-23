@@ -1,0 +1,12 @@
+/* Absolutely necessary for Google Maps version 3 */
+
+/* Absolutely necessary for Google Maps version 3 */
+
+
+#map_canvas {
+
+	width: inherit;
+	height: 300px;
+        box-align: center;
+}
+

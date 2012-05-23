@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="gmaps.css" type="text/css" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript">
+function gmapswindow()
+{
+ 	var points = [
+		['Alewife', 42.395428, -71.142483],
+		['Davis', 42.39674, -71.121815],
+		['Porter', 42.3884, -71.119149],
+		['Harvard', 42.373362, -71.118956],
+		['Central', 42.365486, -71.103802],
+		['Kendall', 42.36249079, -71.08617653],
+		['Charles/MGH', 42.361166, -71.070628],
+		['Park Street', 42.35639457, -71.0624242],
+		['Downtown Crossing', 42.355518, -71.060225],
+		['South Station', 42.352271, -71.055242],
+		['Broadway', 42.342622, -71.056967],
+		['Andrew', 42.330154, -71.057655],
+		['JFK', 42.320685, -71.052391],
+		['Savin Hill', 42.31129, -71.053331],
+		['Fields Corner', 42.300093, -71.061667],
+		['Shawmut', 42.29312583, -71.06573796],
+		['Ashmont', 42.284652, -71.064489],
+		['North Quincy', 42.275275, -71.029583],
+		['Wollaston', 42.2665139, -71.0203369],
+		['Quincy Center', 42.251809, -71.005409],
+		['Quincy Adams', 42.233391, -71.007153],
+		['Braintree', 42.2078543, -71.0011385]
+			];
+
+
+		var center = [42.408, -71.120]
+      var landmark = new google.maps.LatLng(center[0],center[1]);
+	   var myOptions = {
+				zoom: 12, // The larger the zoom number, the bigger the zoom
+     				center: landmark,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+      var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);   
+      var elephant = 'evernote.jpg';	
+      for (i = 0; i<points.length; i++)	
+			{
+				var land = new google.maps.LatLng(points[i][1],points[i][2]);
+				var marker = new google.maps.Marker({
+					position: land,
+					title: points[i][0],
+               icon: elephant
+				});
+				marker.setMap(map);
+				var statwindow = new google.maps.InfoWindow();
+				google.maps.event.addListener(marker, 'click', (function(marker, i) {
+				return function(){
+					statwindow.setContent(points[i][0]);
+					statwindow.open(map, marker);
+					}
+					})(marker,i));
+			}
+}
+</script>
+<body onload="gmapswindow()">
+<div id="map_canvas"></div>
+<div id="loc"></div>
+
+</body>
+</html>
