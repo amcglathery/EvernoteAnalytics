@@ -9,6 +9,7 @@
 #
 
 import sys
+sys.path.append("/h/ahay01/EvernoteAnalytics/EvernoteAnalytics/evernote-sdk-python/lib")
 import hashlib
 import binascii
 import time
@@ -22,17 +23,17 @@ import evernote.edam.error.ttypes as Errors
 
 # Real applications authenticate with Evernote using OAuth, but for the
 # purpose of exploring the API, you can get a developer token that allows
-# you to access your own Evernote account. To get a developer token, visit 
+# you to access your own Evernote account. To get a developer token, visit
 # https://sandbox.evernote.com/api/DeveloperToken.action
-authToken = "your developer token"
+authToken = "S=s1:U=1a644:E=13ed8ff8737:C=137814e5b37:P=1cd:A=en-devtoken:H=7d3621a0a6894f8a70c071fe32ba1542"
 
 if authToken == "your developer token":
     print "Please fill in your developer token"
     print "To get a developer token, visit https://sandbox.evernote.com/api/DeveloperToken.action"
     exit(1)
 
-# Once you have completed your development on our sandbox server, we will 
-# activate your API key on our production servers. To use the production servers, 
+# Once you have completed your development on our sandbox server, we will
+# activate your API key on our production servers. To use the production servers,
 # simply change "sandbox.evernote.com" to "www.evernote.com".
 evernoteHost = "sandbox.evernote.com"
 userStoreUri = "https://" + evernoteHost + "/edam/user"
@@ -59,7 +60,7 @@ noteStoreHttpClient = THttpClient.THttpClient(noteStoreUrl)
 noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
 noteStore = NoteStore.Client(noteStoreProtocol)
 
-# List all of the notebooks in the user's account        
+# List all of the notebooks in the user's account
 notebooks = noteStore.listNotebooks(authToken)
 print "Found ", len(notebooks), " notebooks:"
 for notebook in notebooks:
@@ -69,14 +70,14 @@ print
 print "Creating a new note in the default notebook"
 print
 
-# To create a new note, simply create a new Note object and fill in 
+# To create a new note, simply create a new Note object and fill in
 # attributes such as the note's title.
 note = Types.Note()
 note.title = "Test note from EDAMTest.py"
 
 # To include an attachment such as an image in a note, first create a Resource
-# for the attachment. At a minimum, the Resource contains the binary attachment 
-# data, an MD5 hash of the binary data, and the attachment MIME type. It can also 
+# for the attachment. At a minimum, the Resource contains the binary attachment
+# data, an MD5 hash of the binary data, and the attachment MIME type. It can also
 # include attributes such as filename and location.
 image = open('enlogo.png', 'rb').read()
 md5 = hashlib.md5()
