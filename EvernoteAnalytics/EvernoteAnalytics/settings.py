@@ -162,9 +162,9 @@ LOGGING = {
 
 # (from Ammar) What is this
 # Set these in settingslocal.py
-EVERNOTE_HOST = ""
-EVERNOTE_KEY = ""
-EVERNOTE_SECRET = ""
+EVERNOTE_HOST = "sandbox.evernote.com"
+EVERNOTE_KEY = "mrussell13"
+EVERNOTE_SECRET = "6712f2aeea0ea6bc"
 EVERNOTE_OAUTH_TOKEN_VALIDITY = 1 # OAuth token validity in days: 1 for dev,
                                   # 365 for prod after activation
 
