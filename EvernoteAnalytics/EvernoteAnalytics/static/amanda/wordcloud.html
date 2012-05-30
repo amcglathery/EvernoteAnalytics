@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<link rel="stylesheet" href="cloud.css" type="text/css" />
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery.tagcloud-2.js"></script>
+
+</head>
+
+<body>
+HEY
+<div id="tagcloud">
+</div>
+<script type="text/javascript">
+var tags = [{tag: "computers", count: 56}, {tag: "mobile" , count :35},{tag: "andrew" , count :83}
+,{tag: "javarocks" , count :12},{tag: "coffee" , count :45},{tag: "metaball" , count :120} ];
+$("#tagcloud").tagCloud(tags);
+var children = document.getElementById('tagcloud').childNodes;
+for (var i=0; i<children.length; i=i+2)
+{
+   console.log(children)
+   children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+}
+</script>
+</body>
+
+</html>
+
