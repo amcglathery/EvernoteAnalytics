@@ -4,11 +4,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from evernote_auth import EvernoteAPI
-#import thrift.protocol.TBinaryProtocol as TBinaryProtocol
-#import thrift.transport.THttpClient as THttpClient
-#import evernote.edam.userstore.UserStore as UserStore
-#import evernote.edam.userstore.constants as UserStoreConstants
-#import evernote.edam.notestore.NoteStore as NoteStore
 from analytics import EvernoteStatistics
 import logging
 
@@ -47,11 +42,6 @@ def get_evernote_token(request):
         evernoteHost = "sandbox.evernote.com"
         userStoreUri = "https://" + evernoteHost + "/edam/user"
 
-#        userStoreHttpClient = THttpClient.THttpClient(userStoreUri)
-#        userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
-#        userStore = UserStore.Client(userStoreProtocol)
-
- #       profile.evernote_note_store_url = userStore.getNoteStoreUrl(profile.evernote_token)
         profile.save()
     return HttpResponseRedirect(reverse('basic.views.post_evernote_token',
         args=[]))
