@@ -70,6 +70,7 @@ class EvernoteAPI:
             keys = response_params.keys()
             if 'oauth_token' in keys and 'edam_shard' in keys \
                     and 'edam_userId' in keys:
+                noteStoreUrl = response_params.get('edam_noteStoreUrl')[0]
                 auth_token = response_params.get('oauth_token')[0]
                 edam_shard = response_params.get('edam_shard')[0]
                 edam_userId = response_params.get('edam_userId')[0]
@@ -78,7 +79,8 @@ class EvernoteAPI:
                 return {'oauth_token': auth_token,
                         'edam_shard': edam_shard,
                         'edam_userId': edam_userId,
-                        'expires': expires}
+                        'expires': expires,
+                        'edam_noteStoreUrl' : noteStoreUrl}
             else:
                 return None
         else:
