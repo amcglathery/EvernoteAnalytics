@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css"/>
+      <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css"/>
+
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <title>Evernote Analytics</title>
+    </head>
+    <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="navbar navbar-fixed-top">
+            <div class="container" style="background: #000000">
+                <a class="brand" style="margin-left: 20px; margin-top: 12px">Analysis of Notes</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active" style="margin-top: 12px">
+                          {% if not user.is_authenticated %}
+                          <a href="{% url 'basic.views.run_evernote_auth' %}">Login</a><br/>
+                          {% else %}
+                          <a href="{% url 'account.views.logout_page' %}">Logout</a>
+                          {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        {% block body %}
+        {{ body }}
+        {% endblock body %}
+    </body>
+</html>
