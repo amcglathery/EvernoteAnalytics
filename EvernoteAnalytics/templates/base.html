@@ -8,6 +8,7 @@
         <title>Evernote Analytics</title>
     </head>
     <body>
+       <!--
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -15,16 +16,20 @@
             {% endfor %}
         </ul>
         {% endif %}
+        -->
 
         <div class="navbar navbar-fixed-top">
             <div class="container" style="background: #000000">
-                <a class="brand" style="margin-left: 20px; margin-top: 12px">Analysis of Notes</a>
+              <a class="brand" style="margin-left: 20px; margin-top: 12px">Analysis of Notes</a>
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li class="active" style="margin-top: 12px">
                           {% if not user.is_authenticated %}
-                          <a href="{% url 'basic.views.run_evernote_auth' %}">Login</a><br/>
+                          <a href="{% url 'account.views.login_page' %}">Login</a>
                           {% else %}
+                          <a href="{% url 'basic.views.run_evernote_auth' %}">Login with Evernote</a><br/>
+                          </li>
+                        <li class="active" style="margin-top: 12px">
                           <a href="{% url 'account.views.logout_page' %}">Logout</a>
                           {% endif %}
                         </li>
@@ -33,10 +38,14 @@
             </div>
         </div>
 
-
-
+        <div class="container" style="margin-top:200px">
+        <div class="row">
+          <div class="span8">
         {% block body %}
         {{ body }}
         {% endblock body %}
+      </div>
+    </div>
+  </div>
     </body>
 </html>
