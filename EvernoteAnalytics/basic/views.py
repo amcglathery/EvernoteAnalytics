@@ -43,31 +43,24 @@ def get_evernote_token(request):
             expires_time = datetime.now()
         profile.evernote_token = credentials['oauth_token']
         profile.evernote_token_expires_time = expires_time
-
+        profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
         evernoteHost = "sandbox.evernote.com"
         userStoreUri = "https://" + evernoteHost + "/edam/user"
 
-        userStoreHttpClient = THttpClient.THttpClient(userStoreUri)
-        userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
-        userStore = UserStore.Client(userStoreProtocol)
+#        userStoreHttpClient = THttpClient.THttpClient(userStoreUri)
+#        userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
+#        userStore = UserStore.Client(userStoreProtocol)
 
-        profile.evernote_note_store_url = userStore.getNoteStoreUrl(profile.evernote_token)
+ #       profile.evernote_note_store_url = userStore.getNoteStoreUrl(profile.evernote_token)
         profile.save()
     return HttpResponseRedirect(reverse('basic.views.post_evernote_token',
         args=[]))
 
 def post_evernote_token(request):
-   # profile = request.user.profile
-  #  authToken = profile.evernote_token
     evernoteStats = EvernoteStatistics(request.user.profile)
     notebooks = evernoteStats.get_notebooks()
-#    noteStoreHttpClient = THttpClient.THttpClient(profile.evernote_note_store_url)
- #   noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
-  #  noteStore = NoteStore.Client(noteStoreProtocol)
-  #  notebooks = noteStore.listNotebooks(authToken)
 
   # List all of the notebooks in the user's account
-    notebooks = noteStore.listNotebooks(authToken)
     notes =  "Found " + str(len(notebooks)) + " notebooks:"
     for notebook in notebooks:
         notes += "  * " + notebook.name
