@@ -4,11 +4,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from evernote_auth import EvernoteAPI
-import thrift.protocol.TBinaryProtocol as TBinaryProtocol
-import thrift.transport.THttpClient as THttpClient
-import evernote.edam.userstore.UserStore as UserStore
-import evernote.edam.userstore.constants as UserStoreConstants
-import evernote.edam.notestore.NoteStore as NoteStore
+#import thrift.protocol.TBinaryProtocol as TBinaryProtocol
+#import thrift.transport.THttpClient as THttpClient
+#import evernote.edam.userstore.UserStore as UserStore
+#import evernote.edam.userstore.constants as UserStoreConstants
+#import evernote.edam.notestore.NoteStore as NoteStore
+from analytics import EvernoteStatistics
 import logging
 
 def landing(request):
@@ -48,13 +49,14 @@ def get_evernote_token(request):
         args=[]))
  
 def post_evernote_token(request):
-    profile = request.user.profile
-    authToken = profile.evernote_token
-
-    noteStoreHttpClient = THttpClient.THttpClient(profile.evernote_note_store_url)
-    noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
-    noteStore = NoteStore.Client(noteStoreProtocol)
-    notebooks = noteStore.listNotebooks(authToken)
+   # profile = request.user.profile
+  #  authToken = profile.evernote_token
+    evernoteStats = EvernoteStatistics(request.user.profile)
+    notebooks = evernoteStats.get_notebooks()
+#    noteStoreHttpClient = THttpClient.THttpClient(profile.evernote_note_store_url)
+ #   noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
+  #  noteStore = NoteStore.Client(noteStoreProtocol)
+  #  notebooks = noteStore.listNotebooks(authToken)
 
     return render_to_response('evernote_resp.html', {},
             context_instance=RequestContext(request))
