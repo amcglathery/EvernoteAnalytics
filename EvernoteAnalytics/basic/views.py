@@ -51,9 +51,15 @@ def post_evernote_token(request):
     notebooks = evernoteStats.get_notebooks()
 
   # List all of the notebooks in the user's account
+  #  notecount = 0
+    #notes =  "Found " + str(len(notebooks)) + " notebooks:"
+   # for notebook in notebooks:
+   #     notes += "  * " + notebook.name
+   #     notecount += evernoteStats.get_number_of_notes(notebook)
     notes =  "Found " + str(len(notebooks)) + " notebooks:"
-    for notebook in notebooks:
-        notes += "  * " + notebook.name
+    notebookFrequency = evernoteStats.get_notes_in_notebooks()
+    for (notebook, frequency) in notebookFrequency:
+         notes += "notebook " + evernoteStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
 
-    return render_to_response('evernote_resp.html', {'notes' : notes},
-            context_instance=RequestContext(request))
+    return render_to_response('evernote_resp.html', {'notes' : notes}, 
+      context_instance=RequestContext(request))
