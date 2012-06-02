@@ -56,10 +56,18 @@ def post_evernote_token(request):
    # for notebook in notebooks:
    #     notes += "  * " + notebook.name
    #     notecount += evernoteStats.get_number_of_notes(notebook)
-    notes =  "Found " + str(len(notebooks)) + " notebooks:"
-    notebookFrequency = evernoteStats.get_notes_in_notebooks()
-    for (notebook, frequency) in notebookFrequency:
-         notes += "notebook " + evernoteStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
-
+    noteStats = evernoteStats.get_notes_statistics()
+#    notebookFrequency = evernoteStats.get_notes_in_notebooks()
+#    tagFrequency = evernoteStats.get_notes_in_tags()
+    notebookFrequency = noteStats['notebookCounter']
+    tagFrequency = noteStats['tagCounter']
+    notes =  "Found " + str(len(notebookFrequency)) + " notebooks:"
+    for (notebook, frequency) in notebookFrequency.items():
+#         notes += "notebook " + evernoteStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
+         notes += "notebook " + notebook + ": " + str(frequency) + " * "
+    notes += "Found " + str(len(tagFrequency)) + " tags:"
+    for (tag, frequency) in tagFrequency.items():
+       #  notes += "tag " + evernoteStats.get_tag_name(tag) + ": " + str(frequency) + "* "
+         notes += "tag " + tag + ": " + str(frequency) + "* "
     return render_to_response('evernote_resp.html', {'notes' : notes}, 
       context_instance=RequestContext(request))
