@@ -48,24 +48,25 @@ def get_evernote_token(request):
 
 def post_evernote_token(request):
     evernoteStats = EvernoteStatistics(request.user.profile)
-    notebooks = evernoteStats.get_notebooks()
+    qStats = evernoteStats.get_quick_stats()
 
     #Get's specific notebook information after displaying total
     #number of notebooks
-    numNotebooks = "Found " + str(len(notebooks)) + " notebooks:"
-    notebookSelection = "For notebook " + notebooks[0].name + ":"
+    numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     
-    noteStats = evernoteStats.get_stats_for_notebook(notebooks[0])
-    tagFrequency = noteStats['tagCounter']
-    numNotes = noteStats['numberOfNotes']
-    notes =  "Found " + str(numNotes) + " notes"
-    tags = "Found " + str(len(tagFrequency)) + " tags: "
+    notebookFrequency = qStats['notebookCounts']
+    tagFrequency = qStats['tagCounts']
+    notes =  "Found " + str(qStats['numberOfNotes']) + " notes"
+    notebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
+    tags = "Found " + str(qStats['numberOfTags']) + " tags: "
     
+    for (notebook, frequency) in notebookFrequency.items():
+         notebooks += notebook + ": " + str(frequency) + " * "
     for (tag, frequency) in tagFrequency.items():
-         tags += tag + ": " + str(frequency) + "* "
+         tags += tag + ": " + str(frequency) + " * "
     return render_to_response('evernote_resp.html', 
       {'numNotebooks' : numNotebooks, 
-       'notebookSelection' : notebookSelection,
+       'notebooks' : notebooks,
        'notes' : notes,
        'tags'  : tags}, 
       context_instance=RequestContext(request))

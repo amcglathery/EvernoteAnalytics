@@ -37,12 +37,22 @@ class EvernoteStatistics:
          notebookGuid).name
 
    def get_notes_in_tags(self):
-      return self.noteStore.findNoteCounts(self.profile.evernote_token,
+    return self.noteStore.findNoteCounts(self.profile.evernote_token,
          NoteFilter(), False).tagCounts.items()
 
    def get_tag_name(self, tagGuid):
       return self.noteStore.getTag(self.profile.evernote_token, 
          tagGuid).name
+
+   def get_quick_stats(self):
+      noteCounts = self.noteStore.findNoteCounts(self.profile.evernote_token,
+         NoteFilter(), False)
+      return {'numberOfNotes' : reduce(lambda x, y: x+y,
+                noteCounts.notebookCounts.itervalues()),
+              'numberOfNotebooks' : len(noteCounts.notebookCounts),
+              'numberOfTags' : len(noteCounts.tagCounts),
+              'notebookCounts' : noteCounts.notebookCounts, 
+              'tagCounts' : noteCounts.tagCounts}
 
    def get_stats_for_notebook(self, notebook):
       nf = NoteFilter()
