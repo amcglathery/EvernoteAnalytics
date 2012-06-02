@@ -50,24 +50,22 @@ def post_evernote_token(request):
     evernoteStats = EvernoteStatistics(request.user.profile)
     notebooks = evernoteStats.get_notebooks()
 
-  # List all of the notebooks in the user's account
-  #  notecount = 0
-    #notes =  "Found " + str(len(notebooks)) + " notebooks:"
-   # for notebook in notebooks:
-   #     notes += "  * " + notebook.name
-   #     notecount += evernoteStats.get_number_of_notes(notebook)
-    noteStats = evernoteStats.get_notes_statistics()
-#    notebookFrequency = evernoteStats.get_notes_in_notebooks()
-#    tagFrequency = evernoteStats.get_notes_in_tags()
-    notebookFrequency = noteStats['notebookCounter']
+    #Get's specific notebook information after displaying total
+    #number of notebooks
+    numNotebooks = "Found " + str(len(notebooks)) + " notebooks:"
+    notebookSelection = "For notebook " + notebooks[0].name + ":"
+    
+    noteStats = evernoteStats.get_stats_for_notebook(notebooks[0])
     tagFrequency = noteStats['tagCounter']
-    notes =  "Found " + str(len(notebookFrequency)) + " notebooks:"
-    for (notebook, frequency) in notebookFrequency.items():
-#         notes += "notebook " + evernoteStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
-         notes += "notebook " + notebook + ": " + str(frequency) + " * "
-    notes += "Found " + str(len(tagFrequency)) + " tags:"
+    numNotes = noteStats['numberOfNotes']
+    notes =  "Found " + str(numNotes) + " notes"
+    tags = "Found " + str(len(tagFrequency)) + " tags: "
+    
     for (tag, frequency) in tagFrequency.items():
-       #  notes += "tag " + evernoteStats.get_tag_name(tag) + ": " + str(frequency) + "* "
-         notes += "tag " + tag + ": " + str(frequency) + "* "
-    return render_to_response('evernote_resp.html', {'notes' : notes}, 
+         tags += tag + ": " + str(frequency) + "* "
+    return render_to_response('evernote_resp.html', 
+      {'numNotebooks' : numNotebooks, 
+       'notebookSelection' : notebookSelection,
+       'notes' : notes,
+       'tags'  : tags}, 
       context_instance=RequestContext(request))

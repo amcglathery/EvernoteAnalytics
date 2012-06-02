@@ -44,23 +44,29 @@ class EvernoteStatistics:
       return self.noteStore.getTag(self.profile.evernote_token, 
          tagGuid).name
 
-   def get_notes_statistics(self):
-      notebooks = self.noteStore.listNotebooks(self.profile.evernote_token)
+   def get_stats_for_notebook(self, notebook):
+      nf = NoteFilter()
+      nf.notebookGuid = notebook.guid
+      return self.get_notes_statistics(nf, 0, 25)
+   
+   def get_notes_statistics(self, notefilter, offset, maxnotes):
       notebookCounter = defaultdict(int)
       tagCounter = defaultdict(int)
       dayCounter = defaultdict(int)
-      for notebook in notebooks:
-         nf = NoteFilter()
-         nf.notebookGuid = notebook.guid
-         noteList = self.noteStore.findNotes(self.profile.evernote_token,
-            nf, 0, 25).notes
-         for note in noteList:
+      numNotes = 0
+      noteList = self.noteStore.findNotes(self.profile.evernote_token,
+         notefilter, offset, maxnotes).notes
+      for note in noteList:
             #Should get body of notes
            # d = date.fromtimestamp(note.created)
            # dayCounter[d.day] += 1
-            notebookCounter[notebook.name] += 1
-            tags = self.noteStore.getNoteTagNames(self.profile.evernote_token, note.guid)
-            for tag in tags:
-               tagCounter[tag] += 1
+         numNotes += 1
+         notebookCounter[self.get_notebook_name(notefilter.notebookGuid)] += 1
+         tags = self.noteStore.getNoteTagNames(self.profile.evernote_token, 
+           note.guid)
+         for tag in tags:
+            tagCounter[tag] += 1
       return {'notebookCounter' : notebookCounter, 
-              'tagCounter' : tagCounter, 'dayCounter' : dayCounter}
+              'tagCounter' : tagCounter, 
+              'dayCounter' : dayCounter,
+              'numberOfNotes' : numNotes}
