@@ -47,11 +47,9 @@ def get_evernote_token(request):
         args=[]))
 
 def post_evernote_token(request):
-    evernoteStats = EvernoteStatistics(request.user.profile)
-    qStats = evernoteStats.get_quick_stats()
+    eStats = EvernoteStatistics(request.user.profile)
+    qStats = eStats.get_quick_stats()
 
-    #Get's specific notebook information after displaying total
-    #number of notebooks
     numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     
     notebookFrequency = qStats['notebookCounts']
@@ -61,12 +59,19 @@ def post_evernote_token(request):
     tags = "Found " + str(qStats['numberOfTags']) + " tags: "
     
     for (notebook, frequency) in notebookFrequency.items():
-         notebooks += notebook + ": " + str(frequency) + " * "
+      notebooks += eStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
     for (tag, frequency) in tagFrequency.items():
-         tags += tag + ": " + str(frequency) + " * "
+      tags += eStats.get_tag_name(tag) + ": " + str(frequency) + " * "
+
+    dayFrequency = eStats.get_note_creation()
+    days = "Number of notes created on the following days: "
+    for (day, frequency) in dayFrequency.items():
+      days += str(day) + ": " + str(frequency) + " * "  
+      
     return render_to_response('evernote_resp.html', 
       {'numNotebooks' : numNotebooks, 
        'notebooks' : notebooks,
        'notes' : notes,
-       'tags'  : tags}, 
+       'tags'  : tags,
+       'days'  : days}, 
       context_instance=RequestContext(request))

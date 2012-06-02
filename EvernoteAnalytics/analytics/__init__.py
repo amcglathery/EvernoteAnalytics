@@ -54,6 +54,16 @@ class EvernoteStatistics:
               'notebookCounts' : noteCounts.notebookCounts, 
               'tagCounts' : noteCounts.tagCounts}
 
+   def get_note_creation(self):
+      noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
+         NoteFilter(), 0, 201, NotesMetadataResultSpec(includeCreated=True))
+      dayCounter = defaultdict(int)
+      for metadata in noteMetadataList.notes:
+         d = date.fromtimestamp(metadata.created/1000)
+         dayCounter[d.weekday()] += 1
+      return dayCounter
+      
+   
    def get_stats_for_notebook(self, notebook):
       nf = NoteFilter()
       nf.notebookGuid = notebook.guid
