@@ -19,9 +19,6 @@ class EvernoteStatistics:
    def get_notebooks(self):
       return self.noteStore.listNotebooks(self.profile.evernote_token)
  
- #  def get_statistics_for_notebook(self, notebook=None):
- #  Maybe don't need this? check out findNotecounts
-
    def get_number_of_notes(self, notebook=None):
       filt = NoteFilter()
       filt.notebookGuid = notebook.guid
@@ -44,9 +41,28 @@ class EvernoteStatistics:
       return self.noteStore.getTag(self.profile.evernote_token, 
          tagGuid).name
 
-   def get_quick_stats(self):
+   def get_quick_stats_created_recently(self, day=0, week=0, month=0, year=0):
+      """ returns quick stats since x days/weeks/months/years. Should only
+          ever be called with 1 argument FIXABLE??)
+      """
+      nf = NoteFilter()
+      if day != 0:
+         nf.words = "created:day-" + str(day)
+      elif week != 0:
+         nf.words = "created:week-" + str(week)
+      elif month != 0:
+         nf.words = "created:month-" + str(month)
+      elif month != 0:
+         nf.words = "created:year-" + str(year)
+      return self.get_quick_stats(nf)
+   
+   def get_quick_stats(self, noteFilter=NoteFilter()):
+      """ Returns (fairly quickly) basic statistics regarding a user and their
+           notes for a given filter. No filter will return all the notes for
+           a given user
+      """
       noteCounts = self.noteStore.findNoteCounts(self.profile.evernote_token,
-         NoteFilter(), False)
+         noteFilter, False)
       return {'numberOfNotes' : reduce(lambda x, y: x+y,
                 noteCounts.notebookCounts.itervalues()),
               'numberOfNotebooks' : len(noteCounts.notebookCounts),
@@ -54,21 +70,23 @@ class EvernoteStatistics:
               'notebookCounts' : noteCounts.notebookCounts, 
               'tagCounts' : noteCounts.tagCounts}
 
-   def get_note_creation(self):
+   def get_note_creation(self, noteFilter=NoteFilter()):
+      """ Returns a mapping between weekdays and notes"""
       noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-         NoteFilter(), 0, 201, NotesMetadataResultSpec(includeCreated=True))
+         noteFilter, 0, 201, NotesMetadataResultSpec(includeCreated=True))
       dayCounter = defaultdict(int)
       for metadata in noteMetadataList.notes:
          d = date.fromtimestamp(metadata.created/1000)
          dayCounter[d.weekday()] += 1
       return dayCounter
-      
    
+  #this is SLOW - iterates through all notes
    def get_stats_for_notebook(self, notebook):
       nf = NoteFilter()
       nf.notebookGuid = notebook.guid
       return self.get_notes_statistics(nf, 0, 25)
-   
+  
+  #this is SLOW - iterates through all notes
    def get_notes_statistics(self, notefilter, offset, maxnotes):
       notebookCounter = defaultdict(int)
       tagCounter = defaultdict(int)

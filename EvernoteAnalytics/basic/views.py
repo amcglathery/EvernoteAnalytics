@@ -47,8 +47,12 @@ def get_evernote_token(request):
         args=[]))
 
 def post_evernote_token(request):
+    """ View that is called after a user has sucessfully received a token
+        and displays information
+    """
     eStats = EvernoteStatistics(request.user.profile)
-    qStats = eStats.get_quick_stats()
+#    qStats = eStats.get_quick_stats()
+    qStats = eStats.get_quick_stats_created_recently(month=1)
 
     numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     
