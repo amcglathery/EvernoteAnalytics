@@ -6,7 +6,8 @@ import evernote.edam.userstore.UserStore as UserStore
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
+from monthdelta import monthdelta
 
 class EvernoteStatistics:
 
@@ -42,18 +43,11 @@ class EvernoteStatistics:
          tagGuid).name
 
    def get_quick_stats_created_recently(self, day=0, week=0, month=0, year=0):
-      """ returns quick stats since x days/weeks/months/years. Should only
-          ever be called with 1 argument FIXABLE??)
+      """ returns quick stats for notes created since x days/weeks/months/years.
       """
       nf = NoteFilter()
-      if day != 0:
-         nf.words = "created:day-" + str(day)
-      elif week != 0:
-         nf.words = "created:week-" + str(week)
-      elif month != 0:
-         nf.words = "created:month-" + str(month)
-      elif month != 0:
-         nf.words = "created:year-" + str(year)
+      d = (date.today() - timedelta(days=day,weeks=week)) - monthdelta(months=month + year * 12)
+      nf.words = "created:" + d.strftime("%Y%m%d")
       return self.get_quick_stats(nf)
    
    def get_quick_stats(self, noteFilter=NoteFilter()):

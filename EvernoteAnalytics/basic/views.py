@@ -52,7 +52,7 @@ def post_evernote_token(request):
     """
     eStats = EvernoteStatistics(request.user.profile)
 #    qStats = eStats.get_quick_stats()
-    qStats = eStats.get_quick_stats_created_recently(month=1)
+    qStats = eStats.get_quick_stats_created_recently(month=2)
 
     numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     
