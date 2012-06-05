@@ -53,7 +53,14 @@ def post_evernote_token(request):
     eStats = EvernoteStatistics(request.user.profile)
 #    qStats = eStats.get_quick_stats()
     qStats = eStats.get_quick_stats_created_recently(month=2)
-
+    if qStats is None:
+      return render_to_response('evernote_resp.html',
+         {'numNotebooks' : "No notebooks found for the given time period",
+          'notebooks' : "",
+          'notes': "",
+          'tags': "",
+          'days': ""},
+         context_instance=RequestContext(request))
     numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     
     notebookFrequency = qStats['notebookCounts']

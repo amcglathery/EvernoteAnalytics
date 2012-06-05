@@ -57,6 +57,8 @@ class EvernoteStatistics:
       """
       noteCounts = self.noteStore.findNoteCounts(self.profile.evernote_token,
          noteFilter, False)
+      if noteCounts.notebookCounts is None:
+         return None
       return {'numberOfNotes' : reduce(lambda x, y: x+y,
                 noteCounts.notebookCounts.itervalues()),
               'numberOfNotebooks' : len(noteCounts.notebookCounts),
