@@ -34,8 +34,26 @@ class EvernoteStatistics:
       return self.noteStore.getNotebook(self.profile.evernote_token,
          notebookGuid).name
 
+   #I thought about making this a map to the objects themselves but I
+   #was worried about performance and was planning on putting this into
+   #JSON right away 
+   def get_guid_map(self, notebookNames=True, tagNames=False):
+      """ returns a map from guid to a given object, pass with parameters for
+          different data to be included. Default is only notebooks
+      """
+      guidMap = {}
+      if notebookNames:
+         notebooks = self.noteStore.listNotebooks(self.profile.evernote_token)
+         for notebook in notebooks:
+            guidMap[notebook.guid] = notebook.name
+      if tagNames:
+         tags = self.noteStore.listTags(self.profile.evernote_token)
+         for tag in tags:
+            guidMap[tag.guid] = tag.name
+      return guidMap
+
    def get_notes_in_tags(self):
-    return self.noteStore.findNoteCounts(self.profile.evernote_token,
+      return self.noteStore.findNoteCounts(self.profile.evernote_token,
          NoteFilter(), False).tagCounts.items()
 
    def get_tag_name(self, tagGuid):

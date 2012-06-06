@@ -6,6 +6,7 @@ from django.template import RequestContext
 from evernote_auth import EvernoteAPI
 from analytics import EvernoteStatistics
 import logging
+import json
 
 def landing(request):
     return render_to_response('home.html', {},
@@ -43,7 +44,7 @@ def get_evernote_token(request):
         userStoreUri = "https://" + evernoteHost + "/edam/user"
 
         profile.save()
-    return HttpResponseRedirect(reverse('basic.views.post_evernote_token',
+    return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
         args=[]))
 
 def post_evernote_token(request):
@@ -85,4 +86,28 @@ def post_evernote_token(request):
        'notes' : notes,
        'tags'  : tags,
        'days'  : days}, 
+      context_instance=RequestContext(request))
+
+def post_evernote_js_token(request):
+    """ Test view to work with JSON """
+    eStats = EvernoteStatistics(request.user.profile)
+    qStats = eStats.get_quick_stats_created_recently(month=2)
+    if qStats is None:
+      return render_to_response('evernote_resp.html',
+         {'numNotebooks' : "No notebooks found for the given time period",
+          'notebooks' : "",
+          'notes': "",
+          'tags': "",
+          'days': ""},
+         context_instance=RequestContext(request))
+    numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
+    guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
+    notebookFrequency = qStats['notebookCounts']
+    tagFrequency = qStats['tagCounts']
+    dayFrequency = eStats.get_note_creation()
+    return render_to_response('evernote_js_resp.html',
+      {'notebookFrequency' : json.dumps(notebookFrequency,separators=(',',':')),
+       'tagFrequency' : json.dumps(tagFrequency, separators=(',',':')),
+       'dayFrequency' : json.dumps(dayFrequency, separators=(',',':')),
+       'guidMap'  : guidToNameMap},
       context_instance=RequestContext(request))
