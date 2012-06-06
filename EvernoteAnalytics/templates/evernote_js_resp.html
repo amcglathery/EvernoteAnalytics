@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{{ credentials }}
+{% block body %}
+<h2> TEST </h2>
+<script type="text/javascript" src="{{ STATIC_URL}}amanda/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+   var dayCount = {% autoescape off %} {{ dayFrequency }} {% endautoescape %}
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
+   function drawChart() {
+      var ret = Array(["Sunday",0],["Monday",0],["Tuesday",0],["Wednesday",0],["Thursday",0],["Friday",0],["Saturday",0]);
+      $.each(dayCount, function(i,obj){
+         ret[i][1] = obj
+      })
+      console.log(ret)
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Day');
+      data.addColumn('number', 'Total Notes');
+      data.addRows(ret);
+      var options = {
+          title: '',
+          hAxis: {title: 'Days', titleTextStyle: {color: 'purple'}}
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+      chart.draw(data, options);
+   }
+</script>
+<div class="container" style="margin-top:20px">
+  <div class="row">
+     <div class="span12" style="background: #ffffff">
+        <h2>Total Posts by Day</h2>
+        <div id="chart"></div>
+     </div>
+  </div>
+</div>
+
+{% endblock body %}
