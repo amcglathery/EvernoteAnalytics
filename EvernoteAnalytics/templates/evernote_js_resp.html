@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {{ credentials }}
 {% block body %}
-<h2> TEST </h2>
 <script type="text/javascript" src="{{ STATIC_URL}}amanda/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -36,7 +35,8 @@
         <div id="chart"></div>
      </div>
   </div>
-  <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
+  <div class="row" style="">
+  <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
       <script type="text/javascript">
          google.load("visualization", "1", {packages:["corechart"]});
@@ -62,6 +62,34 @@
          }
       </script>
   <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </div>
+  </div>
+  <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
+   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script type="text/javascript">
+         google.load("visualization", "1", {packages:["corechart"]});
+         google.setOnLoadCallback(drawChart);
+         function drawChart() {
+           var noteCount = {% autoescape off %} {{ tagFrequency }} 
+                           {% endautoescape %}
+           var data = new google.visualization.DataTable();
+           var ret = Array();
+           $.each(noteCount, function(i,obj){
+             ret.push([guidMap[i],obj]);
+           })
+//           console.log(ret);
+           data.addColumn('string', 'Tag');
+           data.addColumn('number', 'Numbers of Notes');
+           data.addRows(ret);
+           var options = {
+             title: 'Posts per Tag'
+           };
+
+           var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
+           chart.draw(data, options);
+         }
+      </script>
+  <div id="chart_div2" style="width: 900px; height: 500px;"></div>
   </div>
 </div>
 {% endblock body %}
