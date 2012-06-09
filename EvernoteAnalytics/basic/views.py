@@ -104,10 +104,13 @@ def post_evernote_js_token(request):
     guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
     notebookFrequency = qStats['notebookCounts']
     tagFrequency = qStats['tagCounts']
-    dayFrequency = eStats.get_note_creation()
+    noteMetadata = eStats.get_note_metadata()
+    dayFrequency = noteMetadata['dayCounter']
+    geoLocations = noteMetadata['geoLocations']
     return render_to_response('evernote_js_resp.html',
       {'notebookFrequency' : json.dumps(notebookFrequency,separators=(',',':')),
        'tagFrequency' : json.dumps(tagFrequency, separators=(',',':')),
        'dayFrequency' : json.dumps(dayFrequency, separators=(',',':')),
+       'geoLocations' : geoLocations,
        'guidMap'  : guidToNameMap},
       context_instance=RequestContext(request))
