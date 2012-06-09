@@ -84,16 +84,27 @@ class EvernoteStatistics:
               'notebookCounts' : noteCounts.notebookCounts, 
               'tagCounts' : noteCounts.tagCounts}
 
-   def get_note_creation(self, noteFilter=NoteFilter()):
-      """ Returns a mapping between weekdays and notes"""
+   def get_note_metadata(self, noteFilter=NoteFilter()):
+      """ Returns a count of number of posts per weekday as well as 
+          a list of the geolocations (if available). In the form
+          [notetitile, latitude, longitude] """
       noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-         noteFilter, 0, 201, NotesMetadataResultSpec(includeCreated=True))
+         noteFilter, 0, 201,
+         NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
+                                 includeTitle=True))
       dayCounter = defaultdict(int)
+      geoLocations = []
+
       for metadata in noteMetadataList.notes:
          d = date.fromtimestamp(metadata.created/1000)
          dayCounter[d.weekday()] += 1
-      return dayCounter
-   
+         a = metadata.attributes
+         if a.latitude is not None:
+            geoLocations.append([metadata.title,a.latitude,a.longitude])
+         
+      return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
+  
+
   #this is SLOW - iterates through all notes
    def get_stats_for_notebook(self, notebook):
       nf = NoteFilter()

@@ -3,11 +3,11 @@
     <head>
       <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css"/>
       <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css"/>
-
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-        <title>Evernote Analytics</title>
+      {% block head %} {{ head }} {% endblock head %}
+      <title>Evernote Analytics</title>
     </head>
-    <body>
+    <body {% block bodyOptions %} {{ bodyOptions }} {% endblock bodyOptions %}>
        <!--
         {% if messages %}
         <ul class="messages">
