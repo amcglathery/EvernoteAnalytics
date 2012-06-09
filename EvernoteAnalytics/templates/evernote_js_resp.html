@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {{ credentials }}
 {% block head %} 
-<link rel="stylesheet" href="amanda/gmaps.css" type="text/css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
 <script type="text/javascript" src="{{ STATIC_URL}}amanda/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 {% endblock head %}
