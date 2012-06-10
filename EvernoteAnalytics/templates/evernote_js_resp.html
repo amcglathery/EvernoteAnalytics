@@ -59,27 +59,11 @@ title: '',
 <div class="row" style="">
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="{{ STATIC_URL}}js/googlePieChart.js"></script>
         <script type="text/javascript">
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.setOnLoadCallback(drawChart);
-            function drawChart() {
-                var noteCount = {% autoescape off %} {{ notebookFrequency }}
-                {% endautoescape %}
-                var data = new google.visualization.DataTable();
-                var ret = Array();
-                $.each(noteCount, function(i,obj){
-                        ret.push([guidMap[i],obj]);
-                        })
-                data.addColumn('string', 'Notebook');
-                data.addColumn('number', 'Numbers of Notes');
-                data.addRows(ret);
-                var options = {
-title: 'Posts per Notebook'
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
-            }
+          var noteCount = {% autoescape off %} {{ notebookFrequency }}
+                          {% endautoescape %}
+          createPieChart(noteCount, guidMap, "Notebook", "chart_div");
         </script>
         <div class="span2" style="float: left">
             <div class="btn-group">
@@ -113,13 +97,13 @@ title: 'Posts per Notebook'
     </div>
 </div>
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        google.load("visualization", "1", {packages:["corechart"]});
+      var noteCount = {% autoescape off %} {{ tagFrequency }}
+                      {% endautoescape %}
+      createPieChart(noteCount, guidMap, "Tag", "chart_div2");
+      /*  google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
-            var noteCount = {% autoescape off %} {{ tagFrequency }}
-            {% endautoescape %}
             var data = new google.visualization.DataTable();
             var ret = Array();
             $.each(noteCount, function(i,obj){
@@ -134,7 +118,7 @@ title: 'Posts per Tag'
 
             var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
             chart.draw(data, options);
-        }
+        }*/
     </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>
 </div>
