@@ -5,8 +5,8 @@ function createPieChart(noteMapping, keyToDisplayMap, displayObjectName, display
    function drawChart() {
      var data = new google.visualization.DataTable();
      var ret = Array();
-     $.each(noteCount, function(i,obj){
-        ret.push([guidMap[i],obj]);
+     $.each(noteMapping, function(i,obj){
+        ret.push([keyToDisplayMap[i],obj]);
      })
      data.addColumn('string', displayObjectName);
      data.addColumn('number', 'Numbers of Notes');

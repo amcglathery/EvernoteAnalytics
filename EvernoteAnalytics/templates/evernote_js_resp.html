@@ -26,29 +26,15 @@
             </div>
         </div>
         <div class="span8" style="float: right">
+
+        <script type="text/javascript" src="{{ STATIC_URL}}js/googleBarGraph.js"></script>
             <script type="text/javascript">
-                var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
-
-                var dayCount = {% autoescape off %} {{ dayFrequency }} {% endautoescape %}
-                google.load("visualization", "1", {packages:["corechart"]});
-                google.setOnLoadCallback(drawChart);
-                function drawChart() {
-                    var ret = Array(["Sunday",0],["Monday",0],["Tuesday",0],["Wednesday",0],["Thursday",0],["Friday",0],["Saturday",0]);
-                    $.each(dayCount, function(i,obj){
-                            ret[i][1] = obj
-                            })
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'Day');
-                    data.addColumn('number', 'Total Notes');
-                    data.addRows(ret);
-                    var options = {
-title: '',
-       hAxis: {title: 'Days', titleTextStyle: {color: 'purple'}}
-                    };
-
-                    var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
-                    chart.draw(data, options);
-                }
+               var dayCount = {% autoescape off %} {{ dayFrequency }} {% endautoescape %}
+               var days = Array(["Sunday",0],["Monday",0],["Tuesday",0],["Wednesday",0],["Thursday",0],["Friday",0],["Saturday",0]);
+               $.each(dayCount, function(i,obj){
+                  days[i][1] = obj;
+               });
+               drawBarGraph(days, 'Day', 'chart');
 </script></div></div>
 <div class="row">
     <div class="span12" style="background: #ffffff">
@@ -58,12 +44,12 @@ title: '',
 </div>
 <div class="row" style="">
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript" src="{{ STATIC_URL}}js/googlePieChart.js"></script>
         <script type="text/javascript">
-          var noteCount = {% autoescape off %} {{ notebookFrequency }}
-                          {% endautoescape %}
-          createPieChart(noteCount, guidMap, "Notebook", "chart_div");
+          var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
+          var notebookCount = {% autoescape off %} {{ notebookFrequency }}
+                          {% endautoescape %};
+          createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
         </script>
         <div class="span2" style="float: left">
             <div class="btn-group">
@@ -98,27 +84,9 @@ title: '',
 </div>
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
     <script type="text/javascript">
-      var noteCount = {% autoescape off %} {{ tagFrequency }}
+      var tagCount = {% autoescape off %} {{ tagFrequency }}
                       {% endautoescape %}
-      createPieChart(noteCount, guidMap, "Tag", "chart_div2");
-      /*  google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            var ret = Array();
-            $.each(noteCount, function(i,obj){
-                    ret.push([guidMap[i],obj]);
-                    })
-            data.addColumn('string', 'Tag');
-            data.addColumn('number', 'Numbers of Notes');
-            data.addRows(ret);
-            var options = {
-title: 'Posts per Tag'
-            };
-
-            var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
-            chart.draw(data, options);
-        }*/
+      createPieChart(tagCount, guidMap, "Tag", "chart_div2");
     </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>
 </div>
