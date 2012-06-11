@@ -7,7 +7,7 @@
 <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
 {% endblock head %}
 
-{% block bodyOptions %} onload="gmapswindow()"{% endblock bodyOptions %}
+{% block bodyOptions %} onload="openMap()"{% endblock bodyOptions %}
 {% block body %}
 <div class="container" style="margin-top:20px">
     <div class="row">
@@ -108,42 +108,16 @@
                 </ul>
             </div>
         </div>
+        <script type="text/javascript" src='{{ STATIC_URL }}/js/googleMapWindow.js'></script>
         <script type="text/javascript">
-            function gmapswindow(){
-                var points = {% autoescape off %} {{ geoLocations }}
-                {% endautoescape %}
-                var center = [42.408, -71.120]
-                    var landmark = new google.maps.LatLng(center[0],center[1]);
-                var myOptions = {
-zoom: 12, // The larger the zoom number, the bigger the zoom
-      center: landmark,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("map_canvas"),
-                        myOptions);
-                var elephant = '{{ STATIC_URL}}amanda/evernote.jpg';
-                for (i = 0; i<points.length; i++) {
-                    var land = new google.maps.LatLng(points[i][1],points[i][2]);
-                    var marker = new google.maps.Marker({
-position: land,
-title: points[i][0],
-icon: elephant
-});
-marker.setMap(map);
-var statwindow = new google.maps.InfoWindow();
-google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function(){
-            statwindow.setContent(points[i][0]);
-            statwindow.open(map, marker);
-            }
-            })(marker,i));
-}
-}
-</script>
-<div id="map_canvas"></div>
-<div id="loc"></div>
+        var geoLocations = {% autoescape off %} {{ geoLocations }}
+                           {% endautoescape %};
+        var openMap = gmapsWindow(geoLocations, '{{ STATIC_URL }}amanda/evernote.jpg', 'map_canvas');
+        </script>
+      <div id="map_canvas"></div>
+      <div id="loc"></div>
     </div></div>
-</div>
-</div>
+   </div>
+   </div>
 </div>
 {% endblock body %}

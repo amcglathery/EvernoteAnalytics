@@ -1,3 +1,8 @@
+//This may only be called after jquery and googlejsapi has been invoked
+//parameters:
+//categoryCounts - nested arrays in the form [[categoryName,count]]
+//categoryTitle - title for bottom header
+//displayElement - div element to be displayed in
 function drawBarGraph(categoryCounts, categoryTitle, displayElement){
   google.load("visualization", "1", {packages:["corechart"]});
   google.setOnLoadCallback(drawChart);
