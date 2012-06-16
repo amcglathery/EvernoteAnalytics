@@ -7,7 +7,9 @@
 <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
 {% endblock head %}
 
-{% block bodyOptions %} onload="openMap()"{% endblock bodyOptions %}
+<!-- onload="openMap()" -->
+{% block bodyOptions %} 
+{% endblock bodyOptions %}
 {% block body %}
 <div class="container" style="margin-top:20px">
     <div class="row">
@@ -46,10 +48,26 @@
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
         <script type="text/javascript" src="{{ STATIC_URL}}js/googlePieChart.js"></script>
         <script type="text/javascript">
-          var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
-          var notebookCount = {% autoescape off %} {{ notebookFrequency }}
-                          {% endautoescape %};
-          createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
+     //     var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
+ //       $(document).ready(function() {
+    //      var notebookCount = {% autoescape off %} {{ notebookFrequency }}
+  //                        {% endautoescape %};
+   //      });
+   $(document).ready( function() {
+      var notebookCount = 0;
+      var guidMap = 0;
+     $.getJSON("{% url 'notebook_json' %}",
+        {username: "{{ user.get_profile.user.username }}"},
+         function(json){
+//          console.log(guidMap);
+ //         console.log(notebookCount);
+          guidMap = json['guidMap'];
+          notebookCount = json['noteFrequency'];
+       //   createPieChart(json['noteFrequency'], json['guidMap'], 
+        //                   "Notebook", "chart_div");
+        });
+      createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
+   });
         </script>
         <div class="span2" style="float: left">
             <div class="btn-group">
@@ -84,9 +102,12 @@
 </div>
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
     <script type="text/javascript">
+    $(document).ready(function() {
+      var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
       var tagCount = {% autoescape off %} {{ tagFrequency }}
                       {% endautoescape %}
       createPieChart(tagCount, guidMap, "Tag", "chart_div2");
+    });
     </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>
 </div>
@@ -110,9 +131,12 @@
         </div>
         <script type="text/javascript" src='{{ STATIC_URL }}/js/googleMapWindow.js'></script>
         <script type="text/javascript">
+    $(document).ready(function() {
         var geoLocations = {% autoescape off %} {{ geoLocations }}
                            {% endautoescape %};
         var openMap = gmapsWindow(geoLocations, '{{ STATIC_URL }}amanda/evernote.jpg', 'map_canvas');
+        openMap();
+     });
         </script>
       <div id="map_canvas"></div>
       <div id="loc"></div>

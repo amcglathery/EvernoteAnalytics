@@ -1,10 +1,11 @@
 from datetime import datetime
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from evernote_auth import EvernoteAPI
 from analytics import EvernoteStatistics
+from account.models import UserProfile
 import logging
 import json
 
@@ -114,3 +115,37 @@ def post_evernote_js_token(request):
        'geoLocations' : geoLocations,
        'guidMap'  : guidToNameMap},
       context_instance=RequestContext(request))
+
+def ajax_pie_chart(request):
+#   if (request.is_ajax()):
+      eStats = EvernoteStatistics(request.user.profile)
+      qStats = eStats.get_quick_stats_created_recently(month=2)
+      numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
+      guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
+      noteFrequency = qStats['notebookCounts']
+      return render_to_response('pie_chart.html',
+        {'noteFrequency' : json.dumps(noteFrequency,separators=(',',':')),
+         'guidMap'  : guidToNameMap},
+        context_instance=RequestContext(request))
+
+def post_evernote_ajax_token(request):
+    """ Test view to work with ajax """
+    return render_to_response('evernote_ajax_resp.html', {}, 
+      context_instance=RequestContext(request))
+
+def notebook_count_json(request):
+ #    if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('username'):
+         profile = UserProfile.objects.get(user__username=GET['username'])
+#         raise Exception(profile.user.username)
+         eStats = EvernoteStatistics(profile)
+         qStats = eStats.get_quick_stats_created_recently(month=2)
+         guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
+         noteFrequency = qStats['notebookCounts']
+         jsonText = json.dumps({'guidMap': guidToNameMap, 
+                                'noteFrequency': noteFrequency})
+         return HttpResponse(jsonText,
+        # return HttpResponse({'guidMap': json.dumps(guidToNameMap),
+        #   'noteFrequency': json.dumps(noteFrequency)},
+            content_type='application/json')
