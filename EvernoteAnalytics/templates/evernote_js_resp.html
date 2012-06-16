@@ -56,17 +56,17 @@
    $(document).ready( function() {
       var notebookCount = 0;
       var guidMap = 0;
-     $.getJSON("{% url 'notebook_json' %}",
+     $.getJSON("{% url notebook_json %}",
         {username: "{{ user.get_profile.user.username }}"},
          function(json){
 //          console.log(guidMap);
  //         console.log(notebookCount);
           guidMap = json['guidMap'];
           notebookCount = json['noteFrequency'];
-       //   createPieChart(json['noteFrequency'], json['guidMap'], 
-        //                   "Notebook", "chart_div");
+          createPieChart(json['noteFrequency'], json['guidMap'], 
+                         "Notebook", "chart_div");
         });
-      createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
+//      createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
    });
         </script>
         <div class="span2" style="float: left">
