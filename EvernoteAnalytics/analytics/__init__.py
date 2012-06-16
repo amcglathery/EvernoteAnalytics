@@ -7,7 +7,7 @@ import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
 from collections import defaultdict
 from datetime import date, timedelta
-import monthdelta
+from monthdelta import MonthDelta as monthdelta
 
 class EvernoteStatistics:
 
