@@ -54,16 +54,10 @@
   //                        {% endautoescape %};
    //      });
    $(document).ready(function() {
-      var notebookCount = 0;
-      var guidMap = 0;
-      console.log("test");
      $.getJSON("{% url notebook_json %}",
         {username: "{{ user.username }}"},
          function(json){
-          console.log(json);
-          guidMap = json['guidMap'];
-          notebookCount = json['noteFrequency'];
-          createPieChart(notebookCount, guidMap, 
+          createPieChart(json['noteFrequency'], json['guidMap'], 
                          "Notebook", "chart_div");
         });
 //      createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
@@ -103,9 +97,7 @@
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
     <script type="text/javascript">
     $(document).ready(function() {
-      var guidMap = {{ guidMap|safe }};
-      var tagCount = {{ tagFrequency|safe }};
-      createPieChart(tagCount, guidMap, "Tag", "chart_div2");
+      createPieChart({{ tagFrequency|safe}}, {{ guidMap|safe }}, "Tag", "chart_div2");
     });
     </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>

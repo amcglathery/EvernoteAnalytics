@@ -1,6 +1,6 @@
 //Requires jsapi to have been envoked beforehand and jquery
+google.load("visualization", "1", {packages:["corechart"]});
 function createPieChart(noteMapping, keyToDisplayMap, displayObjectName, displayElement){
-    google.load("visualization", "1", {packages:["corechart"]});
     google.setOnLoadCallback(function() {
         var data = new google.visualization.DataTable();
         var ret = Array();
