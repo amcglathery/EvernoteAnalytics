@@ -92,7 +92,7 @@ def post_evernote_token(request):
 def post_evernote_js_token(request):
     """ Test view to work with JSON """
     eStats = EvernoteStatistics(request.user.profile)
-    qStats = eStats.get_quick_stats_created_recently(month=2)
+    qStats = eStats.get_quick_stats_created_recently(month=12)
     if qStats is None:
       return render_to_response('evernote_resp.html',
          {'numNotebooks' : "No notebooks found for the given time period",
@@ -119,7 +119,7 @@ def post_evernote_js_token(request):
 def ajax_pie_chart(request):
 #   if (request.is_ajax()):
       eStats = EvernoteStatistics(request.user.profile)
-      qStats = eStats.get_quick_stats_created_recently(month=2)
+      qStats = eStats.get_quick_stats_created_recently(month=12)
       numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
       guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
       noteFrequency = qStats['notebookCounts']
@@ -140,7 +140,7 @@ def notebook_count_json(request):
          profile = UserProfile.objects.get(user__username=GET['username'])
 #         raise Exception(profile.user.username)
          eStats = EvernoteStatistics(profile)
-         qStats = eStats.get_quick_stats_created_recently(month=2)
+         qStats = eStats.get_quick_stats_created_recently(month=12)
          guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
          noteFrequency = qStats['notebookCounts']
          jsonText = json.dumps({'guidMap': guidToNameMap, 
