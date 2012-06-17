@@ -101,7 +101,7 @@ def notebook_count_json(request):
       if GET.has_key('username'):
          profile = UserProfile.objects.get(user__username=GET['username'])
          eStats = EvernoteStatistics(profile)
-         qStats = eStats.get_quick_stats_created_recently(month=2)
+         qStats = eStats.get_quick_stats_created_recently(month=12)
          guidToNameMap = eStats.get_guid_map(notebookNames=True)
          noteFrequency = qStats['notebookCounts']
          jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 

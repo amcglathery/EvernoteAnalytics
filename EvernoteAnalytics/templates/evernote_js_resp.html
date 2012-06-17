@@ -31,6 +31,7 @@
 
         <script type="text/javascript" src="{{ STATIC_URL}}js/barGraphCallback.js"></script>
             <script type="text/javascript">
+            google.load("visualization", "1", {packages:["corechart"]});
             google.setOnLoadCallback(
                createBarGraphCallback("{% url day_count_json %}",
                                       "{{ user.get_profile.user.username }}",
@@ -46,7 +47,6 @@
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
    <script type="text/javascript" src="{{ STATIC_URL}}js/pieChartCallback.js"></script>
     <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(
          createPieChartCallback("{% url notebook_count_json %}",
                                 "{{ user.get_profile.user.username }}",
