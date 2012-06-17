@@ -10,9 +10,9 @@ function createMapCallback(jsonUrl, usernameStr, iconUrl, divElement){
           center: landmark,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        var map = new google.maps.Map(document.getElementById(divElement),myOptions);
+        var map = new google.maps.Map($('#'+divElement).get(0),myOptions);
         var elephant = iconUrl;
-        for (i = 0; i<points.length; i++) {
+        for (var i=0; i<points.length; i++) {
            var land = new google.maps.LatLng(points[i][1],points[i][2]);
            var marker = new google.maps.Marker({
              position: land,
@@ -45,7 +45,7 @@ function createBarGraphCallback(jsonUrl, usernameStr, divElement){
        title: '',
        hAxis: {title: categoryTitle + 's', titleTextStyle: {color: 'purple'}}
                     };
-    var chart = new google.visualization.ColumnChart(document.getElementById(divElement));
+    var chart = new google.visualization.ColumnChart($('#'+divElement).get(0));
     chart.draw(data, options);
   })};
 }
@@ -68,7 +68,7 @@ function createPieChartCallback(jsonUrl, usernameStr, divElement){
           var options = {
               title: 'Posts per ' + displayObjectName
            };
-          var chart = new google.visualization.PieChart(document.getElementById(divElement));
+          var chart = new google.visualization.PieChart($('#'+divElement).get(0));
           chart.draw(data, options);
           })};
 }
