@@ -91,61 +91,64 @@ def post_evernote_token(request):
 
 def post_evernote_js_token(request):
     """ Test view to work with JSON """
-    eStats = EvernoteStatistics(request.user.profile)
-    qStats = eStats.get_quick_stats_created_recently(month=2)
-    if qStats is None:
-      return render_to_response('evernote_resp.html',
-         {'numNotebooks' : "No notebooks found for the given time period",
-          'notebooks' : "",
-          'notes': "",
-          'tags': "",
-          'days': ""},
-         context_instance=RequestContext(request))
-    numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
-    guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
-    notebookFrequency = qStats['notebookCounts']
-    tagFrequency = qStats['tagCounts']
-    noteMetadata = eStats.get_note_metadata()
-    dayFrequency = noteMetadata['dayCounter']
-    geoLocations = noteMetadata['geoLocations']
-    return render_to_response('evernote_js_resp.html',
-      {'notebookFrequency' : json.dumps(notebookFrequency,separators=(',',':')),
-       'tagFrequency' : json.dumps(tagFrequency, separators=(',',':')),
-       'dayFrequency' : json.dumps(dayFrequency, separators=(',',':')),
-       'geoLocations' : geoLocations,
-       'guidMap'  : guidToNameMap},
-      context_instance=RequestContext(request))
-
-def ajax_pie_chart(request):
-#   if (request.is_ajax()):
-      eStats = EvernoteStatistics(request.user.profile)
-      qStats = eStats.get_quick_stats_created_recently(month=2)
-      numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
-      guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
-      noteFrequency = qStats['notebookCounts']
-      return render_to_response('pie_chart.html',
-        {'noteFrequency' : json.dumps(noteFrequency,separators=(',',':')),
-         'guidMap'  : guidToNameMap},
-        context_instance=RequestContext(request))
-
-def post_evernote_ajax_token(request):
-    """ Test view to work with ajax """
-    return render_to_response('evernote_ajax_resp.html', {}, 
+    profile = request.user.profile
+    return render_to_response('evernote_js_resp.html',{},
       context_instance=RequestContext(request))
 
 def notebook_count_json(request):
- #    if request.method == 'GET':
+    if request.method == 'GET':
       GET = request.GET
       if GET.has_key('username'):
          profile = UserProfile.objects.get(user__username=GET['username'])
-#         raise Exception(profile.user.username)
          eStats = EvernoteStatistics(profile)
          qStats = eStats.get_quick_stats_created_recently(month=2)
-         guidToNameMap = eStats.get_guid_map(notebookNames=True, tagNames=True)
+         guidToNameMap = eStats.get_guid_map(notebookNames=True)
          noteFrequency = qStats['notebookCounts']
-         jsonText = json.dumps({'guidMap': guidToNameMap, 
-                                'noteFrequency': noteFrequency})
-         return HttpResponse(jsonText,
-        # return HttpResponse({'guidMap': json.dumps(guidToNameMap),
-        #   'noteFrequency': json.dumps(noteFrequency)},
-            content_type='application/json')
+         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 
+                                'noteMapping': noteFrequency,
+                                'displayObjectName': 'Notebook'})
+         return HttpResponse(jsonText,content_type='application/json')
+
+def tag_count_json(request):
+    if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('username'):
+         profile = UserProfile.objects.get(user__username=GET['username'])
+         eStats = EvernoteStatistics(profile)
+         qStats = eStats.get_quick_stats_created_recently(month=2)
+         guidToNameMap = eStats.get_guid_map(tagNames=True)
+         tagFrequency = qStats['tagCounts']
+         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 
+                                'noteMapping': tagFrequency,
+                                'displayObjectName': 'Tag'})
+         return HttpResponse(jsonText,content_type='application/json')
+
+def day_count_json(request):
+    if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('username'):
+         profile = UserProfile.objects.get(user__username=GET['username'])
+         eStats = EvernoteStatistics(profile)
+         noteMetadata = eStats.get_note_metadata()
+         dayFrequency = noteMetadata['dayCounter']
+         intToDayMap = {0: "Sunday", 1: "Monday", 2: "Tuesday", 
+                        3: "Wednesday", 4: "Thursday", 5: "Friday", 
+                        6: "Saturday"}
+         days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                 "Friday", "Saturday"]
+         daysArray = [[x,0] for x in days]
+         for (k,v) in dayFrequency.iteritems():
+            daysArray[k][1] = v
+         jsonText = json.dumps({'categoryCounts': daysArray,
+                                'categoryTitle': 'Day'})
+         return HttpResponse(jsonText,content_type='application/json')
+
+def geo_loc_json(request):
+    if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('username'):
+         profile = UserProfile.objects.get(user__username=GET['username'])
+         eStats = EvernoteStatistics(profile)
+         noteMetadata = eStats.get_note_metadata()
+         jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
+         return HttpResponse(jsonText,content_type='application/json')

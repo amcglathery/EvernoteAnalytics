@@ -29,14 +29,12 @@
         </div>
         <div class="span8" style="float: right">
 
-        <script type="text/javascript" src="{{ STATIC_URL}}js/googleBarGraph.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL}}js/barGraphCallback.js"></script>
             <script type="text/javascript">
-               var dayCount = {% autoescape off %} {{ dayFrequency }} {% endautoescape %}
-               var days = Array(["Sunday",0],["Monday",0],["Tuesday",0],["Wednesday",0],["Thursday",0],["Friday",0],["Saturday",0]);
-               $.each(dayCount, function(i,obj){
-                  days[i][1] = obj;
-               });
-               drawBarGraph(days, 'Day', 'chart');
+            google.setOnLoadCallback(
+               createBarGraphCallback("{% url day_count_json %}",
+                                      "{{ user.get_profile.user.username }}",
+                                      "chart"));
 </script></div></div>
 <div class="row">
     <div class="span12" style="background: #ffffff">
@@ -46,28 +44,13 @@
 </div>
 <div class="row" style="">
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
-        <script type="text/javascript" src="{{ STATIC_URL}}js/googlePieChart.js"></script>
-        <script type="text/javascript">
-     //     var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
- //       $(document).ready(function() {
-    //      var notebookCount = {% autoescape off %} {{ notebookFrequency }}
-  //                        {% endautoescape %};
-   //      });
-   $(document).ready( function() {
-      var notebookCount = 0;
-      var guidMap = 0;
-     $.getJSON("{% url notebook_json %}",
-        {username: "{{ user.get_profile.user.username }}"},
-         function(json){
-//          console.log(guidMap);
- //         console.log(notebookCount);
-          guidMap = json['guidMap'];
-          notebookCount = json['noteFrequency'];
-          createPieChart(json['noteFrequency'], json['guidMap'], 
-                         "Notebook", "chart_div");
-        });
-//      createPieChart(notebookCount, guidMap, "Notebook", "chart_div");
-   });
+   <script type="text/javascript" src="{{ STATIC_URL}}js/pieChartCallback.js"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(
+         createPieChartCallback("{% url notebook_count_json %}",
+                                "{{ user.get_profile.user.username }}",
+                                "chart_div"));
         </script>
         <div class="span2" style="float: left">
             <div class="btn-group">
@@ -102,12 +85,10 @@
 </div>
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
     <script type="text/javascript">
-    $(document).ready(function() {
-      var guidMap = {% autoescape off %} {{ guidMap }} {% endautoescape %}
-      var tagCount = {% autoescape off %} {{ tagFrequency }}
-                      {% endautoescape %}
-      createPieChart(tagCount, guidMap, "Tag", "chart_div2");
-    });
+      google.setOnLoadCallback(
+         createPieChartCallback("{% url tag_count_json %}",
+                                "{{ user.get_profile.user.username }}",
+                                "chart_div2"));
     </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>
 </div>
@@ -129,14 +110,13 @@
                 </ul>
             </div>
         </div>
-        <script type="text/javascript" src='{{ STATIC_URL }}/js/googleMapWindow.js'></script>
+        <script type="text/javascript" src='{{ STATIC_URL }}/js/gmapsCallback.js'></script>
         <script type="text/javascript">
-    $(document).ready(function() {
-        var geoLocations = {% autoescape off %} {{ geoLocations }}
-                           {% endautoescape %};
-        var openMap = gmapsWindow(geoLocations, '{{ STATIC_URL }}amanda/evernote.jpg', 'map_canvas');
-        openMap();
-     });
+      google.setOnLoadCallback(
+         createMapCallback("{% url geo_loc_json %}",
+                           "{{ user.get_profile.user.username }}",
+                           "{{ STATIC_URL }}amanda/evernote.jpg",
+                           "map_canvas"));
         </script>
       <div id="map_canvas"></div>
       <div id="loc"></div>

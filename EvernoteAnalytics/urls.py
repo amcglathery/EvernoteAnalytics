@@ -16,6 +16,6 @@ urlpatterns = patterns('',
         {'document_root': STATIC_ROOT}),
     url(r'^account/', include('account.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^charts/', include('basic.urls')),
+    url(r'^data/', include('basic.urls')),
 )
 
