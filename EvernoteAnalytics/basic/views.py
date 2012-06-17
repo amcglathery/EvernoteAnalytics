@@ -54,7 +54,7 @@ def post_evernote_token(request):
     """
     eStats = EvernoteStatistics(request.user.profile)
 #    qStats = eStats.get_quick_stats()
-    qStats = eStats.get_quick_stats_created_recently(month=2)
+    qStats = eStats.get_quick_stats_created_recently(month=12)
     if qStats is None:
       return render_to_response('evernote_resp.html',
          {'numNotebooks' : "No notebooks found for the given time period",
@@ -115,7 +115,7 @@ def tag_count_json(request):
       if GET.has_key('username'):
          profile = UserProfile.objects.get(user__username=GET['username'])
          eStats = EvernoteStatistics(profile)
-         qStats = eStats.get_quick_stats_created_recently(month=2)
+         qStats = eStats.get_quick_stats_created_recently(month=12)
          guidToNameMap = eStats.get_guid_map(tagNames=True)
          tagFrequency = qStats['tagCounts']
          jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 

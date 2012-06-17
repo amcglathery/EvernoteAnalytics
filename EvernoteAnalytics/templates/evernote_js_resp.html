@@ -2,9 +2,6 @@
 {{ credentials }}
 {% block head %}
 <link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
-<script type="text/javascript" src="{{ STATIC_URL}}amanda/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
 {% endblock head %}
 
 <!-- onload="openMap()" -->
@@ -29,14 +26,7 @@
         </div>
         <div class="span8" style="float: right">
 
-        <script type="text/javascript" src="{{ STATIC_URL}}js/barGraphCallback.js"></script>
-            <script type="text/javascript">
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.setOnLoadCallback(
-               createBarGraphCallback("{% url day_count_json %}",
-                                      "{{ user.get_profile.user.username }}",
-                                      "chart"));
-</script></div></div>
+</div></div>
 <div class="row">
     <div class="span12" style="background: #ffffff">
         <h2>Total Posts by Day</h2>
@@ -45,13 +35,6 @@
 </div>
 <div class="row" style="">
     <div class="span5" style="text-align: center; margin-top: 10%; vertical-align: center">
-   <script type="text/javascript" src="{{ STATIC_URL}}js/pieChartCallback.js"></script>
-    <script type="text/javascript">
-      google.setOnLoadCallback(
-         createPieChartCallback("{% url notebook_count_json %}",
-                                "{{ user.get_profile.user.username }}",
-                                "chart_div"));
-        </script>
         <div class="span2" style="float: left">
             <div class="btn-group">
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -84,18 +67,11 @@
     </div>
 </div>
 <div class="span5" style="text-align: center; margin-left: auto; margin-right: auto;">
-    <script type="text/javascript">
-      google.setOnLoadCallback(
-         createPieChartCallback("{% url tag_count_json %}",
-                                "{{ user.get_profile.user.username }}",
-                                "chart_div2"));
-    </script>
     <div id="chart_div2" style="width: 900px; height: 500px;"></div>
 </div>
 <div class="row">
     <div class="span10" style="margin-top: 20px">
         <h2> Geotags of posts </h2>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
         <div class="span2" style="float: left">
             <div class="btn-group">
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -110,6 +86,39 @@
                 </ul>
             </div>
         </div>
+      <div id="map_canvas"></div>
+      <div id="loc"></div>
+    </div></div>
+   </div>
+   </div>
+</div>
+{% endblock body %}
+{% block extrascript %}
+<script type="text/javascript" src="{{ STATIC_URL}}amanda/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL}}js/barGraphCallback.js"></script>
+            <script type="text/javascript">
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.setOnLoadCallback(
+               createBarGraphCallback("{% url day_count_json %}",
+                                      "{{ user.get_profile.user.username }}",
+                                      "chart"));
+                                  </script>
+   <script type="text/javascript" src="{{ STATIC_URL}}js/pieChartCallback.js"></script>
+    <script type="text/javascript">
+      google.setOnLoadCallback(
+         createPieChartCallback("{% url notebook_count_json %}",
+                                "{{ user.get_profile.user.username }}",
+                                "chart_div"));
+        </script>
+    <script type="text/javascript">
+      google.setOnLoadCallback(
+         createPieChartCallback("{% url tag_count_json %}",
+                                "{{ user.get_profile.user.username }}",
+                                "chart_div2"));
+    </script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
         <script type="text/javascript" src='{{ STATIC_URL }}/js/gmapsCallback.js'></script>
         <script type="text/javascript">
       google.setOnLoadCallback(
@@ -118,10 +127,4 @@
                            "{{ STATIC_URL }}amanda/evernote.jpg",
                            "map_canvas"));
         </script>
-      <div id="map_canvas"></div>
-      <div id="loc"></div>
-    </div></div>
-   </div>
-   </div>
-</div>
-{% endblock body %}
+{% endblock extrascript %}
