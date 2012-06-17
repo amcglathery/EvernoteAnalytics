@@ -41,9 +41,6 @@ def get_evernote_token(request):
         profile.evernote_token = credentials['oauth_token']
         profile.evernote_token_expires_time = expires_time
         profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
-        evernoteHost = "sandbox.evernote.com"
-        userStoreUri = "https://" + evernoteHost + "/edam/user"
-
         profile.save()
     return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
         args=[]))
