@@ -1,6 +1,6 @@
-function createMapCallback(jsonUrl, usernameStr, iconUrl, divElement){
+function createMapCallback(jsonUrl, iconUrl, divElement){
   return function() {
-    $.getJSON(jsonUrl,{username : usernameStr},
+    $.getJSON(jsonUrl,{},
       function(json){
         var points = json['points']
         var center = [42.408, -71.120]
@@ -31,9 +31,9 @@ function createMapCallback(jsonUrl, usernameStr, iconUrl, divElement){
       })};
 }
 
-function createBarGraphCallback(jsonUrl, usernameStr, divElement){
+function createBarGraphCallback(jsonUrl, divElement){
   return function() {
-    $.getJSON(jsonUrl,{username : usernameStr},
+    $.getJSON(jsonUrl,{},
       function(json){
           var data = new google.visualization.DataTable();
     var data = new google.visualization.DataTable();
@@ -50,18 +50,20 @@ function createBarGraphCallback(jsonUrl, usernameStr, divElement){
   })};
 }
 
-function createPieChartCallback(jsonUrl, usernameStr, divElement){
+function createPieChartCallback(jsonUrl, divElement){
    return function(){
-     $.getJSON(jsonUrl,{username : usernameStr},
+     $.getJSON(jsonUrl,{},
        function(json){
           keyToDisplayMap = json['keyToDisplayMap'];
-          noteMapping = json['noteMapping'];
+          noteArray = json['noteArray'];
           displayObjectName = json['displayObjectName'];
+          evernoteSearchParam = json['evernoteSearchParam'];
           var data = new google.visualization.DataTable();
           var ret = Array();
-          $.each(noteMapping, function(i,obj){
-            ret.push([keyToDisplayMap[i],obj]);
-          })
+          $.each(noteArray, function(i, obj){
+            ret.push([keyToDisplayMap[obj[0]],obj[1]]);
+          });
+
           data.addColumn('string', displayObjectName);
           data.addColumn('number', 'Numbers of Notes');
           data.addRows(ret);
@@ -70,5 +72,17 @@ function createPieChartCallback(jsonUrl, usernameStr, divElement){
            };
           var chart = new google.visualization.PieChart($('#'+divElement).get(0));
           chart.draw(data, options);
+          google.visualization.events.addListener(chart, 'select',
+          function selectHandler(){
+            if(chart.getSelection().length == 1){
+               selection = chart.getSelection()[0];
+               var guid = noteArray[selection.row][0];
+               console.log(guid);
+               var url = 'http://sandbox.evernote.com/Home.action?#'
+                  + evernoteSearchParam + '=' + guid;
+               console.log(url);
+               window.open(url);
+            }
+          });
           })};
 }

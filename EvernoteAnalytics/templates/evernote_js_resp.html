@@ -109,16 +109,12 @@
 <script type="text/javascript">
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(createBarGraphCallback("{% url day_count_json %}",
-                                                "{{user.username}}",
                                                 "chart"));
 google.setOnLoadCallback(createPieChartCallback("{% url notebook_count_json %}",
-                                                "{{user.username}}",
                                                 "chart_div"));
-google.setOnLoadCallback(createPieChartCallback("{% url tag_count_json %}",
-                                                "{{user.username}}",
-                                                "chart_div2"));
+//google.setOnLoadCallback(createPieChartCallback("{% url tag_count_json %}",
+ //                                               "chart_div2"));
 google.setOnLoadCallback(createMapCallback("{% url geo_loc_json %}",
-                                           "{{user.username}}",
                                            "{{STATIC_URL}}amanda/evernote.jpg",
                                            "map_canvas"));
 </script>
