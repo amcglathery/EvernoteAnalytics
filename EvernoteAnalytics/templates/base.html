@@ -1,55 +1,56 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css"/>
-      <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css"/>
-      <link rel ="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
-      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-      {% block head %} {{ head }} {% endblock head %}
-      <title>Evernote Analytics</title>
-    </head>
-    <body {% block bodyOptions %} {{ bodyOptions }} {% endblock bodyOptions %}>
-       <!--
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        -->
+<head>
+  <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css"/>
+  <link rel ="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css"/>
+  <link rel ="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  {% block head %} {{ head }} {% endblock head %}
+  <title>Evernote Analytics</title>
+</head>
+<body {% block bodyOptions %} {{ bodyOptions }} {% endblock bodyOptions %}>
+  <!--
+  {% if messages %}
+  <ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  -->
 
-        <div class="navbar navbar-fixed-top">
-            <div class="container" style="background: #000000">
-              <a class="brand" style="margin-left: 20px; margin-top: 12px">Analysis of Notes</a>
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="active" style="margin-top: 12px">
-                          {% if not user.is_authenticated %}
-                          <a href="{% url account.views.login_page %}">Login</a>
-                          {% else %}
-                          <a href="{% url basic.views.run_evernote_auth %}">Login with Evernote</a><br/>
-                          </li>
-                        <li class="active" style="margin-top: 12px">
-                          <a href="{% url account.views.logout_page %}">Logout</a>
-                          {% endif %}
-                        </li>
-                    </ul>
-                </div>
-            </div>
+  <div class="container" style="margin-top:20px; margin: auto">
+    <img src="{{ STATIC_URL }}amanda/logo.jpg" />
+    <div class="navbar">
+      <div class="navbar-inner" id="nav">
+        <div class="container" style="background: #003366">
+            <!-- <a class="brand">Analysis of Notes</a> -->
+          <div class="nav-collapse">
+            <ul class="nav" style="background: #006699">
+              <li class="active" style="background-color: #036">
+                {% if not user.is_authenticated %}
+                <a href="{% url account.views.login_page %}">Login</a>
+                {% else %}
+                <a href="{% url basic.views.run_evernote_auth %}">Login with Evernote</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="{% url account.views.logout_page %}">Logout</a>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <div class="container" style="margin-top:200px">
-        <div class="row">
-          <div class="span8">
-        {% block body %}
-        {{ body }}
-        {% endblock body %}
       </div>
+    </div>
+
+    <div class="row">
+      {% block body %}
+      {{ body }}
+      {% endblock body %}
     </div>
   </div>
   {% block extrascript %}
   {{ extrascript }}
   {% endblock extrascript %}
-    </body>
+</body>
 </html>

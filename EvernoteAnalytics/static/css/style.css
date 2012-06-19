@@ -11,3 +11,19 @@
 	height: 300px;
         box-align: center;
 }
+
+#nav {
+  background: #003366;
+  margin: auto;
+
+}
+
+body {
+    background-image: url("../amanda/grid18.png");
+    padding-top: 60px;
+    padding-bottom: 40px;
+    padding-right: auto;
+    padding-left: auto;
+    background-color: #ccccff;
+}
+
