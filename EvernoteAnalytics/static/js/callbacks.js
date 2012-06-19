@@ -73,13 +73,50 @@ function createPieChartCallback(jsonUrl, divElement){
           var chart = new google.visualization.PieChart($('#'+divElement).get(0));
           chart.draw(data, options);
           google.visualization.events.addListener(chart, 'select',
-          function selectHandler(){
+          function(){
             if(chart.getSelection().length == 1){
                selection = chart.getSelection()[0];
                var guid = noteArray[selection.row][0];
                console.log(guid);
                var url = 'http://sandbox.evernote.com/Home.action?#'
                   + evernoteSearchParam + '=' + guid;
+               console.log(url);
+               window.open(url);
+            }
+          });
+          })};
+}
+
+function createPieChartCallback2(jsonUrl, divElement){
+   return function(){
+     $.getJSON(jsonUrl,{},
+       function(json){
+          keyToDisplayMap = json['keyToDisplayMap'];
+          noteArray2 = json['noteArray'];
+          displayObjectName = json['displayObjectName'];
+          evernoteSearchParam2 = json['evernoteSearchParam'];
+          var data = new google.visualization.DataTable();
+          var ret = Array();
+          $.each(noteArray2, function(i, obj){
+            ret.push([keyToDisplayMap[obj[0]],obj[1]]);
+          });
+
+          data.addColumn('string', displayObjectName);
+          data.addColumn('number', 'Numbers of Notes');
+          data.addRows(ret);
+          var options = {
+              title: 'Posts per ' + displayObjectName
+           };
+          var chart2 = new google.visualization.PieChart($('#'+divElement).get(0));
+          chart2.draw(data, options);
+          google.visualization.events.addListener(chart2, 'select',
+          function(){
+            if(chart2.getSelection().length == 1){
+               selection = chart2.getSelection()[0];
+               var guid2 = noteArray2[selection.row][0];
+               console.log(guid2);
+               var url = 'http://sandbox.evernote.com/Home.action?#'
+                  + evernoteSearchParam2 + '=' + guid2;
                console.log(url);
                window.open(url);
             }

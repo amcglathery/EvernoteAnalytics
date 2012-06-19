@@ -5,9 +5,10 @@ from evernote.edam.notestore.ttypes import *
 import evernote.edam.userstore.UserStore as UserStore
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
-from collections import defaultdict
+from collections import defaultdict, Counter
 from datetime import date, timedelta
 from monthdelta import MonthDelta as monthdelta
+import re 
 
 class EvernoteStatistics:
 
@@ -104,6 +105,16 @@ class EvernoteStatistics:
          
       return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
+   def get_word_string(self, noteFilter=NoteFilter(), offset=0, maxnotes=200):
+      noteList = self.noteStore.findNotes(self.profile.evernote_token,
+         noteFilter, offset, maxnotes).notes
+      wordCounter = defaultdict(int)
+      c = Counter()
+      for note in noteList:
+         words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
+            note.guid, False, True)
+         c += Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
+      return c
 
   #this is SLOW - iterates through all notes
    def get_stats_for_notebook(self, notebook):

@@ -137,10 +137,14 @@ def day_count_json(request):
 
 def geo_loc_json(request):
     if request.method == 'GET':
-#      GET = request.GET
-#      if GET.has_key('username'):
-#         profile = UserProfile.objects.get(user__username=GET['username'])
          eStats = EvernoteStatistics(request.user.profile)
          noteMetadata = eStats.get_note_metadata()
          jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
          return HttpResponse(jsonText,content_type='application/json')
+
+def word_count_json(request):
+    if request.method == 'GET':
+      eStats = EvernoteStatistics(request.user.profile)
+      wordCount = eStats.get_word_string()
+      jsonText = json.dumps({'words' : wordCount.items()})
+      return HttpResponse(jsonText,content_type='application/json')
