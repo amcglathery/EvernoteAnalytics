@@ -63,14 +63,14 @@ def login_evernote_token(request):
         userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
         userStore = UserStore.Client(userStoreProtocol)
         evernoteUser = userStore.getUser(credentials['oauth_token'])
-        user = authenticate(user=evernoteUser.username, password=evernoteUser.id)
+        user = authenticate(username=evernoteUser.username, password=str(evernoteUser.id))
         if not user:
-            newUser = User.objects.create_user(evernoteUser.username, evernoteUser.email, evernoteUser.id)
+            newUser = User.objects.create_user(evernoteUser.username, evernoteUser.email, str(evernoteUser.id))
             names = evernoteUser.name.split() if evernoteUser.name else None
             newUser.first_name = names[0] if names and len(names) > 0 else ""
             newUser.last_name = names[1] if names and len(names) > 1 else ""
             newUser.save()
-            user = authenticate(user=evernoteUser.username, password=evernoteUser.id)
+            user = authenticate(username=evernoteUser.username, password=str(evernoteUser.id))
         login(request, user)
     try:
         expires_time = datetime.fromtimestamp(int(credentials['expires']))
