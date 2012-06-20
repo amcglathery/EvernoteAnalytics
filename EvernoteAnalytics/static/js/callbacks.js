@@ -114,10 +114,10 @@ function createPieChartCallback2(jsonUrl, divElement){
             if(chart2.getSelection().length == 1){
                selection = chart2.getSelection()[0];
                var guid2 = noteArray2[selection.row][0];
-               console.log(guid2);
+       //        console.log(guid2);
                var url = 'http://sandbox.evernote.com/Home.action?#'
                   + evernoteSearchParam2 + '=' + guid2;
-               console.log(url);
+     //          console.log(url);
                window.open(url);
             }
           });

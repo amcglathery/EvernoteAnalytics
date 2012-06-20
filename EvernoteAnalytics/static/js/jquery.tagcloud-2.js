@@ -108,7 +108,8 @@ jQuery.fn.tagCloud = function(cl, givenOptions) { //return this.each( function()
    this.empty();
    for (var i = 0; i < cl.length; ++i) {
       var tag = cl[i][0];
-      var tagEl = jQuery('<a href="" id="tagcloudlink" style="font-size: '
+      var link = "http://sandbox.evernote.com/Home.action?#x=" + tag;
+      var tagEl = jQuery('<a href=' + link + ' id="tagcloudlink" style="font-size: '
                            + getNormalizedSize(cl[i][1])
                            + 'em; text-decoration:none;">' + tag + '<\/a>')
                   .data('tag', tag);
@@ -116,7 +117,9 @@ jQuery.fn.tagCloud = function(cl, givenOptions) { //return this.each( function()
       if (options.click) {
          tagEl.click(function(event) {
             event.preventDefault();
-            options.click(jQuery(event.target).data('tag'), event);
+            tag =  jQuery(event.target).data('tag');
+            var link2 = "http://sandbox.evernote.com/Home.action?#x=" + tag;
+            window.open(link2);
          });
       }
       this.append(tagEl).append(" ");
