@@ -72,15 +72,16 @@ def login_evernote_token(request):
             newUser.save()
             user = authenticate(username=evernoteUser.username, password=str(evernoteUser.id))
         login(request, user)
+    profile = request.user.profile
     try:
         expires_time = datetime.fromtimestamp(int(credentials['expires']))
     except TypeError:
         logging.error("Error parsing token expires time")
         expires_time = datetime.now()
-    user.profile.evernote_token = credentials['oauth_token']
-    user.profile.evernote_token_expires_time = expires_time
-    user.profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
-    user.save()
+    profile.evernote_token = credentials['oauth_token']
+    profile.evernote_token_expires_time = expires_time
+    profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
+    profile.save()
     return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
         args=[]))
 
