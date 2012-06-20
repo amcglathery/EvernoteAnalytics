@@ -43,3 +43,4 @@ def logout_page(request):
     messages.info(request, "Successfully logged out")
     return HttpResponseRedirect(reverse('account.views.login_page',
         args=[]))
+

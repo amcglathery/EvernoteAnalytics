@@ -7,6 +7,7 @@ class UserProfile(models.Model):
     evernote_token = models.CharField(blank=True, max_length=256)
     evernote_token_expires_time = models.DateTimeField(null=True, blank=True)
     evernote_note_store_url = models.URLField(max_length=256, blank=True)
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
       UserProfile.objects.create(user=instance)
