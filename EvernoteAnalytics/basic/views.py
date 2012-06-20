@@ -7,13 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from evernote_auth import EvernoteAPI
 from analytics import EvernoteStatistics
-<<<<<<< HEAD
 from account.models import UserProfile
-=======
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol
 import thrift.transport.THttpClient as THttpClient
 import evernote.edam.userstore.UserStore as UserStore
->>>>>>> login
 import logging
 import json
 
@@ -50,8 +47,6 @@ def get_evernote_token(request):
         profile.evernote_token_expires_time = expires_time
         profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
         profile.save()
-<<<<<<< HEAD
-=======
     return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
         args=[]))
 
@@ -88,7 +83,6 @@ def login_evernote_token(request):
     profile.evernote_token_expires_time = expires_time
     profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
     profile.save()
->>>>>>> login
     return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
         args=[]))
 
