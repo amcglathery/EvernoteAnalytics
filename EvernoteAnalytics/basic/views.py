@@ -187,6 +187,6 @@ def geo_loc_json(request):
 def word_count_json(request):
     if request.method == 'GET':
       eStats = EvernoteStatistics(request.user.profile)
-      wordCount = eStats.get_word_count(numWords=50)
+      wordCount = eStats.get_word_count(numWords=75)
       jsonText = json.dumps({'words' : wordCount})
       return HttpResponse(jsonText,content_type='application/json')

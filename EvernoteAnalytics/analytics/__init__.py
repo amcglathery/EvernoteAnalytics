@@ -90,8 +90,9 @@ class EvernoteStatistics:
           a list of the geolocations (if available). In the form
           [notetitile, latitude, longitude] """
       noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-         noteFilter, 0, 201,
-         NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
+      noteFilter, 0, 201,
+#      noteMetadataList = self.get_all_metadata(noteFilter,
+      NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
                                  includeTitle=True))
       dayCounter = defaultdict(int)
       geoLocations = []
@@ -106,6 +107,7 @@ class EvernoteStatistics:
       return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
    def get_word_count(self, noteFilter=NoteFilter(), numWords=None):
+      #currently never repopulates unless user store is empty
       if self.profile.notes_word_count is None:
          guidToWordCount = self.update_word_count()
       else:
@@ -135,7 +137,8 @@ class EvernoteStatistics:
       if startDate is not None:
         nf.words = "updated:" + startDate.strftime("%Y%m%d")
       noteList = self.noteStore.findNotes(self.profile.evernote_token,
-         nf, 0, 200).notes
+                                          nf, 0, 200).notes
+      #self.get_all_notes(nf)
       
       d = dict()
       for note in noteList: 
@@ -146,6 +149,33 @@ class EvernoteStatistics:
       self.profile.notes_word_count = d
       self.profile.save()
       return d
+
+   #Both of these helper functions are very broken
+   def get_all_notes(self, notefilter):
+       """ This is a helper method that will handle paginations in the data """
+       noteList = self.noteStore.findNotes(self.profile.evernote_token,
+                                          notefilter, 0, 50)
+       notes = noteList.notes
+#       raise Exception(str(noteList.startIndex) + " " + str(len(notes)) + 
+#                        " " + str(noteList.totalNotes))
+       while noteList.totalNotes != len(notes):
+          noteList = self.noteStore.findNotes(self.profile.evernote_token,
+                  notefilter, noteList.startIndex + len(notes), 50)
+          notes.extend(noteList.notes)
+       return notes
+
+   def get_all_metadata(self, notefilter, resultSpec):
+       """ helper method to handle paginations """
+       noteList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
+                                          notefilter, 0, 50, resultSpec)
+       notes = noteList.notes
+       while noteList.totalNotes != len(notes) - 1:
+          raise Exception(str(noteList.startIndex) + " " + str(len(notes)) + 
+                        " " + str(noteList.totalNotes))
+          noteList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
+                  notefilter, noteList.startIndex + len(notes), 50, resultSpec)
+          notes.extend(noteList.notes)
+       return notes
 
   #this is SLOW - iterates through all notes
    def get_stats_for_notebook(self, notebook):

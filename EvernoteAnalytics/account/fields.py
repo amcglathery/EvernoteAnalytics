@@ -1,3 +1,4 @@
+#https://bitbucket.org/offline/django-annoying/src/a0de8b294db3/annoying/fields.pya
 from django.db import models
 from django.db.models import OneToOneField
 from django.utils import simplejson as json
