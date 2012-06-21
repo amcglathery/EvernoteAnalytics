@@ -105,22 +105,47 @@ class EvernoteStatistics:
          
       return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
-   def get_word_count(self, noteFilter=NoteFilter(), offset=0, maxnotes=200,
+   def get_word_count(self, noteFilter=NoteFilter(), numWords=None):
+      if self.profile.notes_word_count is None:
+         guidToWordCount = self.update_word_count()
+      else:
+         guidToWordCount = self.profile.notes_word_count
+      c = Counter()
+      for d in guidToWordCount.values():
+         c.update(d)
+      if numWords is None:
+         return c.most_common()
+      else:
+         return c.most_common(numWords)
+      
+
+   def get_word_count2(self, noteFilter=NoteFilter(), offset=0, maxnotes=200,
                        numWords=None):
       noteList = self.noteStore.findNotes(self.profile.evernote_token,
          noteFilter, offset, maxnotes).notes
-     
-#      c = Counter()
       words = ''.join([self.noteStore.getNoteSearchText(self.profile.evernote_token, note.guid, False, True) for note in noteList])
-  #    for note in noteList:
-  #       words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
-  #          note.guid, False, True)
-  #       c += Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
       c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
       if numWords is None:
          return c.most_common()
       else:
          return c.most_common(numWords)
+
+   def update_word_count(self, startDate=None):
+      nf = NoteFilter() 
+      if startDate is not None:
+        nf.words = "updated:" + startDate.strftime("%Y%m%d")
+      noteList = self.noteStore.findNotes(self.profile.evernote_token,
+         nf, 0, 200).notes
+      
+      d = dict()
+      for note in noteList: 
+         words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
+         note.guid, False, True)
+         c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
+         d[note.guid] = c
+      self.profile.notes_word_count = d
+      self.profile.save()
+      return d
 
   #this is SLOW - iterates through all notes
    def get_stats_for_notebook(self, notebook):
