@@ -1,4 +1,5 @@
 Django==1.4
+psycopg2==2.4.5
 MonthDelta==1.0a
 distribute==0.6.10
 wsgiref==0.1.2
