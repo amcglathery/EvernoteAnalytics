@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
+<div class="span12">
 <form action="{% url account.views.auth %}" method="post">
     <input type="text" name="username" placeholder="Username" />
     <input type="password" placeholder="Password" name="password" />
@@ -7,4 +8,5 @@
     {% csrf_token %}
 </form>
 <a class="btn btn-primary btn-large" href="{% url basic.views.run_evernote_auth %}">Login with Evernote</a>
+</div>
 {% endblock body %}
