@@ -28,7 +28,7 @@
           <div class="nav-collapse">
             <ul class="nav" style="background: #006699">
                 <li class="active" style="background-color: #036">
-                {% if user.is_authenticated %}
+                {% if not user.is_authenticated %}
                 <a href="{% url basic.views.run_evernote_auth %}">Login</a>
                 {% else %}
                 <a href="{% url account.views.logout_page %}">Logout</a>
