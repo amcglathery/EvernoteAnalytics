@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 local_settings.py
+database_settings.py
 *.sqlite
 venv
 *.swp
