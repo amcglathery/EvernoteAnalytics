@@ -55,6 +55,7 @@ body {
 #box {
   margin: 0px auto;
   opacity: 1.0;
+  top: 26%;
   background-color: #26537C;
   width: 60%;
   position: absolute;
@@ -111,7 +112,7 @@ body {
 }
 @-moz-keyframes show {
   0% {
-     top: 0; 
+    top: 0; 
   }
 	100% {
 	  top: 26%;
