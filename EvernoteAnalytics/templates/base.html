@@ -27,12 +27,38 @@
             <!-- <a class="brand">Analysis of Notes</a> -->
           <div class="nav-collapse">
             <ul class="nav" style="background: #006699">
-                <li class="active" style="background-color: #036">
-                {% if not user.is_authenticated %}
+              {% if not user.is_authenticated %}
+              <li class="active" style="background-color: #036">
                 <a href="{% url basic.views.run_evernote_auth %}">Login</a>
-                {% else %}
+              </li>
+              {% else %}
+              <li class="active" style="background-color: #036">
                 <a href="{% url account.views.logout_page %}">Logout</a>
-                {% endif %}
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Usage</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Tags</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Notebooks</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Geotags</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Word Cloud</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Awesome Suggestion Thing</a>
+              </li>
+              {% endif %}
+              <li class="active" style="background-color: #036">
+                <a href="#">About Us</a>
+              </li>
+              <li class="active" style="background-color: #036">
+                <a href="#">Contact Us</a>
               </li>
             </ul>
           </div>
