@@ -137,7 +137,9 @@ def post_evernote_js_token(request):
 def notebook_count_json(request):
     if request.method == 'GET':
          eStats = EvernoteStatistics(request.user.profile)
-         qStats = eStats.get_quick_stats_created_recently(month=12)
+         date = eStats.date_from_today(month=12)
+         filt = eStats.create_date_filter(date)
+         qStats = eStats.get_quick_stats(filt)
          guidToNameMap = eStats.get_guid_map(notebookNames=True)
          noteFrequency = qStats['notebookCounts']
          notebookArray = [[k,v] for k,v in noteFrequency.iteritems()]
@@ -150,7 +152,9 @@ def notebook_count_json(request):
 def tag_count_json(request):
     if request.method == 'GET':
          eStats = EvernoteStatistics(request.user.profile)
-         qStats = eStats.get_quick_stats_created_recently(month=12)
+         date = eStats.date_from_today(month=12)
+         filt = eStats.create_date_filter(date)
+         qStats = eStats.get_quick_stats(filt)
          guidToNameMap = eStats.get_guid_map(tagNames=True, notebookNames=False)
          tagFrequency = qStats['tagCounts']
          tagArray = [[k,v] for k,v in tagFrequency.iteritems()]
@@ -163,7 +167,9 @@ def tag_count_json(request):
 def day_count_json(request):
     if request.method == 'GET':
          eStats = EvernoteStatistics(request.user.profile)
-         noteMetadata = eStats.get_note_metadata()
+         date = eStats.date_from_today(month=12)
+         filt = eStats.create_date_filter(date)
+         noteMetadata = eStats.get_note_metadata(filt)
          dayFrequency = noteMetadata['dayCounter']
          intToDayMap = {0: "Sunday", 1: "Monday", 2: "Tuesday", 
                         3: "Wednesday", 4: "Thursday", 5: "Friday", 
@@ -180,7 +186,9 @@ def day_count_json(request):
 def geo_loc_json(request):
     if request.method == 'GET':
          eStats = EvernoteStatistics(request.user.profile)
-         noteMetadata = eStats.get_note_metadata()
+         date = eStats.date_from_today(month=12)
+         filt = eStats.create_date_filter(date)
+         noteMetadata = eStats.get_note_metadata(filt)
          jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
          return HttpResponse(jsonText,content_type='application/json')
 

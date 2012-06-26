@@ -1,5 +1,5 @@
 # Django settings for EvernoteAnalytics project.
-import os, dj_database_url
+import os
 ROOT_PATH = os.path.dirname(__file__)
 
 DEBUG = True
@@ -13,9 +13,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
-}
+#Put database stuff in database_settings
+try: 
+   from database_settings import *
+except ImportError:
+   import dj_database_url
+   DATABASES = {
+     'default': dj_database_url.config(default='postgres://localhost')
+   } 
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

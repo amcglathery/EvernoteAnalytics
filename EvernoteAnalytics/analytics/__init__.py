@@ -61,14 +61,6 @@ class EvernoteStatistics:
       return self.noteStore.getTag(self.profile.evernote_token, 
          tagGuid).name
 
-   def get_quick_stats_created_recently(self, day=0, week=0, month=0, year=0):
-      """ returns quick stats for notes created since x days/weeks/months/years.
-      """
-      nf = NoteFilter()
-      d = (date.today() - timedelta(days=day,weeks=week)) - monthdelta(months=month + year * 12)
-      nf.words = "created:" + d.strftime("%Y%m%d")
-      return self.get_quick_stats(nf)
-   
    def get_quick_stats(self, noteFilter=NoteFilter()):
       """ Returns (fairly quickly) basic statistics regarding a user and their
            notes for a given filter. No filter will return all the notes for
@@ -90,8 +82,7 @@ class EvernoteStatistics:
           a list of the geolocations (if available). In the form
           [notetitile, latitude, longitude] """
       noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-      noteFilter, 0, 201,
-#      noteMetadataList = self.get_all_metadata(noteFilter,
+      noteFilter, 0, 200,
       NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
                                  includeTitle=True))
       dayCounter = defaultdict(int)
@@ -106,7 +97,7 @@ class EvernoteStatistics:
          
       return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
-   def get_word_count(self, noteFilter=NoteFilter(), numWords=None):
+   def get_word_count(self, nf=NoteFilter(), numWords=None):
       #currently never repopulates unless user store is empty
       if self.profile.notes_word_count is None:
          guidToWordCount = self.update_word_count()
@@ -121,25 +112,23 @@ class EvernoteStatistics:
          return c.most_common(numWords)
       
 
-   def get_word_count2(self, noteFilter=NoteFilter(), offset=0, maxnotes=200,
-                       numWords=None):
-      noteList = self.noteStore.findNotes(self.profile.evernote_token,
-         noteFilter, offset, maxnotes).notes
-      words = ''.join([self.noteStore.getNoteSearchText(self.profile.evernote_token, note.guid, False, True) for note in noteList])
-      c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
-      if numWords is None:
-         return c.most_common()
-      else:
-         return c.most_common(numWords)
+#   def get_word_count2(self, noteFilter=NoteFilter(), offset=0, maxnotes=200,
+#                       numWords=None):
+#      noteList = self.noteStore.findNotes(self.profile.evernote_token,
+#         noteFilter, offset, maxnotes).notes
+#      words = ''.join([self.noteStore.getNoteSearchText(self.profile.evernote_token, note.guid, False, True) for note in noteList])
+#      c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
+#      if numWords is None:
+#         return c.most_common()
+#      else:
+#         return c.most_common(numWords)
 
-   def update_word_count(self, startDate=None):
-      nf = NoteFilter() 
-      if startDate is not None:
-        nf.words = "updated:" + startDate.strftime("%Y%m%d")
+   def update_word_count(self, nf=NoteFilter()):
+ #     nf = NoteFilter() 
+ #     if startDate is not None:
+ #       nf.words = "updated:" + startDate.strftime("%Y%m%d")
       noteList = self.noteStore.findNotes(self.profile.evernote_token,
                                           nf, 0, 200).notes
-      #self.get_all_notes(nf)
-      
       d = dict()
       for note in noteList: 
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
@@ -164,6 +153,7 @@ class EvernoteStatistics:
           notes.extend(noteList.notes)
        return notes
 
+   #BROKEN
    def get_all_metadata(self, notefilter, resultSpec):
        """ helper method to handle paginations """
        noteList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
@@ -177,31 +167,24 @@ class EvernoteStatistics:
           notes.extend(noteList.notes)
        return notes
 
-  #this is SLOW - iterates through all notes
-   def get_stats_for_notebook(self, notebook):
-      nf = NoteFilter()
-      nf.notebookGuid = notebook.guid
-      return self.get_notes_statistics(nf, 0, 25)
-  
-  #this is SLOW - iterates through all notes
-   def get_notes_statistics(self, notefilter, offset, maxnotes):
-      notebookCounter = defaultdict(int)
-      tagCounter = defaultdict(int)
-      dayCounter = defaultdict(int)
-      numNotes = 0
-      noteList = self.noteStore.findNotes(self.profile.evernote_token,
-         notefilter, offset, maxnotes).notes
-      for note in noteList:
-            #Should get body of notes
-           # d = date.fromtimestamp(note.created)
-           # dayCounter[d.day] += 1
-         numNotes += 1
-         notebookCounter[self.get_notebook_name(notefilter.notebookGuid)] += 1
-         tags = self.noteStore.getNoteTagNames(self.profile.evernote_token, 
-           note.guid)
-         for tag in tags:
-            tagCounter[tag] += 1
-      return {'notebookCounter' : notebookCounter, 
-              'tagCounter' : tagCounter, 
-              'dayCounter' : dayCounter,
-              'numberOfNotes' : numNotes}
+   def create_date_filter(self, range1, range2=None, created=True):
+       """Adds a date filter into a given note filter (or creates one)
+          if only 1 range is specified then it is a since filter
+          if created is true then return a created filter, 
+          if false, then an updated one """
+       nf = NoteFilter()
+       filtertype = ""
+       if created:
+         filtertype = "created:"
+       else: 
+         filtertype = "updated:"
+       filt = filtertype + range1.strftime("%Y%m%d")
+       if range2 is not None:
+         filt += " -" + filtertype + range2.strftime("%Y%m%d")
+       nf.words = filt
+       return nf
+       
+   def date_from_today(self, day=0, week=0, month=0, year=0):
+      d = (date.today() - timedelta(days=day,weeks=week)) - monthdelta(months=month + year * 12)
+      return d
+
