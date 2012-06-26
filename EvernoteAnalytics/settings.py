@@ -1,5 +1,5 @@
 # Django settings for EvernoteAnalytics project.
-import os
+import os, dj_database_url
 ROOT_PATH = os.path.dirname(__file__)
 
 DEBUG = True
@@ -14,14 +14,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(ROOT_PATH, 'db.sqlite'),                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
+    'default': dj_database_url.config(default='postgres://localhost')
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -67,7 +60,7 @@ STATIC_ROOT = os.path.join(ROOT_PATH, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'http://127.0.0.1:8000/static/'
+STATIC_URL = 'http://evernoteanalytics.herokuapp.com/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
