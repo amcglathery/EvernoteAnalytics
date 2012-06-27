@@ -36,22 +36,19 @@
                 <a href="{% url account.views.logout_page %}">Logout</a>
               </li>
               <li class="active" style="background-color: #036">
-                <a href="#">Usage</a>
+                <a href="{% url basic.views.usage %}">Usage</a>
               </li>
               <li class="active" style="background-color: #036">
-                <a href="#">Tags</a>
+                <a href="{% url basic.views.tags %}">Tags</a>
               </li>
               <li class="active" style="background-color: #036">
-                <a href="#">Notebooks</a>
+                <a href="{% url basic.views.notebooks %}">Notebooks</a>
               </li>
               <li class="active" style="background-color: #036">
-                <a href="#">Geotags</a>
+                <a href="{% url basic.views.wordcloud%}">Word Cloud</a>
               </li>
               <li class="active" style="background-color: #036">
-                <a href="#">Word Cloud</a>
-              </li>
-              <li class="active" style="background-color: #036">
-                <a href="#">ML Stuff</a>
+                <a href="{% url basic.views.map %}">Map</a>
               </li>
               {% endif %}
             </ul>
