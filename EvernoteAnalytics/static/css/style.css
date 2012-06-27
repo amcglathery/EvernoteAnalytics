@@ -30,9 +30,8 @@ body {
     background-color: #ccccff;
 }
 
-#chart_div, #chart_div2 {
-  width: 900px;
-  height: 500px;
+#chart {
+  height: 425px;
 }
 
 #click {
