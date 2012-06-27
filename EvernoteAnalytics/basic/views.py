@@ -83,7 +83,7 @@ def login_evernote_token(request):
     profile.evernote_token_expires_time = expires_time
     profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
     profile.save()
-    return HttpResponseRedirect(reverse('basic.views.post_evernote_js_token',
+    return HttpResponseRedirect(reverse('basic.views.usage',
         args=[]))
 
 
@@ -132,6 +132,26 @@ def post_evernote_js_token(request):
     """ Test view to work with JSON """
     profile = request.user.profile
     return render_to_response('evernote_js_resp.html',{},
+      context_instance=RequestContext(request))
+
+def usage(request):
+    return render_to_response('usage.html', {},
+      context_instance=RequestContext(request))
+
+def tags(request):
+    return render_to_response('tags.html', {},
+      context_instance=RequestContext(request))
+      
+def notebooks(request):
+    return render_to_response('notebooks.html', {},
+      context_instance=RequestContext(request))
+
+def map(request):
+    return render_to_response('map.html', {},
+      context_instance=RequestContext(request))
+
+def wordcloud(request):
+    return render_to_response('wordcloud.html', {},
       context_instance=RequestContext(request))
 
 def notebook_count_json(request):
