@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{{ credentials }}
+{% block head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}slider/css/iThing.css"/>
+{% endblock head %}
+
+{% block bodyOptions %}
+{% endblock bodyOptions %}
+{% block body %}
+<div class="span6 offset3" style="height: 75px">
+   <br/>
+   <div id="slider"></div>
+   <br/>
+    <! -- PUT SLIDER HERE -->
+</div>
+</div>
+
+<div class="row">
+  <div class="span12"  style="text-align: center; vertical-align: center;">
+    <h2>Most Common Words</h2>
+    <div id="tagcloud"></div>
+  </div>
+</div><br />
+
+{% endblock body %}
+{% block extrascript %}
+<script type="text/javascript" src="{{ STATIC_URL}}js/jquery-1.7.2.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jquery-ui-1.8.16.custom.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jquery.mousewheel.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jQAllRangeSliders-min.js">
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi">
+</script>
+<script type="text/javascript"
+src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}js/jquery.tagcloud-2.js">
+</script>
+<script type="text/javascript">
+var slider = $("#slider");
+slider.dateRangeSlider({
+     //Bounds should be day of first note and todays date
+     //start values should be one (?) month back
+     bounds: {min: 969681600000, max: 1340763583545},
+});
+function eventfun(value, name){
+   //maybe just have a button that pulls the values to recompute data
+   console.log(slider.dateRangeSlider("values"));
+};
+slider.bind("valuesChanged", eventfun);
+$.getJSON("{% url word_count_json %}",{},
+function(json){
+  $("#tagcloud").tagCloud(json['words']);
+  var children = document.getElementById('tagcloud').childNodes;
+  for (var i=0; i<children.length; i=i+2){
+    children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+  }
+});
+</script>
+{% endblock extrascript %}
