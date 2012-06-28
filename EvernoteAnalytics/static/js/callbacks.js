@@ -50,10 +50,15 @@ function createBarGraphCallback(jsonUrl, divElement){
   })};
 }
 
-function createPieChartCallback(jsonUrl, divElement){
-   return function(){
-     $.getJSON(jsonUrl,{},
+function createPieChart(jsonUrl, divElement, startDate, endDate){
+//   return 
+     $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
        function(json){
+          if (json == null) {
+            //Make this look better
+            $('#'+divElement).html("No data found");
+            return;
+          }
           keyToDisplayMap = json['keyToDisplayMap'];
           noteArray = json['noteArray'];
           displayObjectName = json['displayObjectName'];
@@ -84,7 +89,8 @@ function createPieChartCallback(jsonUrl, divElement){
                window.open(url);
             }
           });
-          })};
+          })
+          //};
 }
 
 function createPieChartCallback2(jsonUrl, divElement){

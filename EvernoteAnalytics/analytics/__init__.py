@@ -35,6 +35,15 @@ class EvernoteStatistics:
       return self.noteStore.getNotebook(self.profile.evernote_token,
          notebookGuid).name
 
+   def get_first_note_timestamp(self):
+      nf = NoteFilter()
+      nf.order = 1
+      nf.ascending = True
+      firstNote = self.noteStore.findNotes(self.profile.evernote_token,
+         nf,0,1).notes[0]
+      return firstNote.created
+         
+
    #I thought about making this a map to the objects themselves but I
    #was worried about performance and was planning on putting this into
    #JSON right away 

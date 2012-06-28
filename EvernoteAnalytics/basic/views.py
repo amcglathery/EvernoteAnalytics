@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -139,7 +139,9 @@ def usage(request):
       context_instance=RequestContext(request))
 
 def tags(request):
-    return render_to_response('tags.html', {},
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('tags.html', {'firstNote': t},
       context_instance=RequestContext(request))
       
 def notebooks(request):
@@ -171,10 +173,15 @@ def notebook_count_json(request):
 
 def tag_count_json(request):
     if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
          eStats = EvernoteStatistics(request.user.profile)
-         date = eStats.date_from_today(month=12)
-         filt = eStats.create_date_filter(date)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
          qStats = eStats.get_quick_stats(filt)
+         if qStats is None:
+            return HttpResponse({},content_type='application/json')   
          guidToNameMap = eStats.get_guid_map(tagNames=True, notebookNames=False)
          tagFrequency = qStats['tagCounts']
          tagArray = [[k,v] for k,v in tagFrequency.iteritems()]
