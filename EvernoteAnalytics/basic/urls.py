@@ -7,4 +7,5 @@ urlpatterns = patterns( '',
      url( r'^days_json/$', day_count_json, name = 'day_count_json'),
      url( r'^geoloc_json/$', geo_loc_json, name = 'geo_loc_json'),
      url( r'^word_json/$', word_count_json, name = 'word_count_json'),
+     url( r'^month_json/$', month_count_json, name = 'month_count_json'),
 )

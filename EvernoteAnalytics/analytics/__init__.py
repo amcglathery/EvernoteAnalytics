@@ -6,7 +6,7 @@ import evernote.edam.userstore.UserStore as UserStore
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
 from collections import defaultdict, Counter
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from monthdelta import MonthDelta as monthdelta
 import re 
 
@@ -95,16 +95,21 @@ class EvernoteStatistics:
       NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
                                  includeTitle=True))
       dayCounter = defaultdict(int)
+      monthCounter = defaultdict(int)
+      hourCounter = defaultdict(int)
       geoLocations = []
 
       for metadata in noteMetadataList.notes:
-         d = date.fromtimestamp(metadata.created/1000)
+         d = datetime.fromtimestamp(metadata.created/1000)
          dayCounter[d.weekday()] += 1
+         monthCounter[d.month] += 1
+         hourCounter[d.hour] += 1
          a = metadata.attributes
          if a.latitude is not None:
             geoLocations.append([metadata.title,a.latitude,a.longitude])
          
-      return { 'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
+      return { 'monthCounter': monthCounter, 'hourCounter': hourCounter,
+               'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
    def get_word_count(self, nf=NoteFilter(), numWords=None):
       #currently never repopulates unless user store is empty
@@ -120,22 +125,7 @@ class EvernoteStatistics:
       else:
          return c.most_common(numWords)
       
-
-#   def get_word_count2(self, noteFilter=NoteFilter(), offset=0, maxnotes=200,
-#                       numWords=None):
-#      noteList = self.noteStore.findNotes(self.profile.evernote_token,
-#         noteFilter, offset, maxnotes).notes
-#      words = ''.join([self.noteStore.getNoteSearchText(self.profile.evernote_token, note.guid, False, True) for note in noteList])
-#      c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
-#      if numWords is None:
-#         return c.most_common()
-#      else:
-#         return c.most_common(numWords)
-
    def update_word_count(self, nf=NoteFilter()):
- #     nf = NoteFilter() 
- #     if startDate is not None:
- #       nf.words = "updated:" + startDate.strftime("%Y%m%d")
       noteList = self.noteStore.findNotes(self.profile.evernote_token,
                                           nf, 0, 200).notes
       d = dict()

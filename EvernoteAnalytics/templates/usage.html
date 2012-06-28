@@ -12,14 +12,17 @@
    <br/>
    <div id="slider"></div>
    <br/>
-    <! -- PUT SLIDER HERE -->
 </div>
 </div>
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
+<button onClick="hourButtonClicked()">Display by Hours</button>
+<button onClick="dayButtonClicked()">Display by Days</button>
+<button onClick="monthButtonClicked()">Display by Months</button>
+
 <div class="row">
 
 
 <div class="span12" style="background: #ffffff">
-  <h2>Total Posts by Day</h2>
   <div id="chart"></div>
 </div>
 </div>
@@ -42,20 +45,45 @@ src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 <script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
 </script>
 <script type="text/javascript">
+var queryUrl = "{% url day_count_json %}";
+var minBound = {{ firstNote }};
+var maxBound = (new Date()).getTime();
 var slider = $("#slider");
 slider.dateRangeSlider({
-     //Bounds should be day of first note and todays date
-     //start values should be one (?) month back
-     bounds: {min: 969681600000, max: 1340763583545},
+     bounds: {min: minBound, max: maxBound},
+     //Probably should limit this by default
+     defaultValues: {min: minBound, max: maxBound}
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
-   console.log(slider.dateRangeSlider("values"));
+   var values = slider.dateRangeSlider("values");
+   console.log(values.min.getTime());
+   console.log(values.max.getTime());
 };
 slider.bind("valuesChanged", eventfun);
 
 google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(createBarGraphCallback("{% url day_count_json %}",
-"chart"));
+google.setOnLoadCallback(function(){
+   createBarGraph(queryUrl,"chart", minBound, maxBound);
+   }
+);
+function dateButtonClicked(){
+   var values = slider.dateRangeSlider("values");
+   minBound = values.min.getTime();
+   maxBound = values.max.getTime();
+   createBarGraph(queryUrl,"chart", minBound, maxBound);
+};
+function dayButtonClicked(){
+   queryUrl = "{% url day_count_json %}";
+   createBarGraph(queryUrl,
+                  "chart", minBound, maxBound);
+};
+
+function monthButtonClicked(){
+   queryUrl = "{% url month_count_json %}";
+   createBarGraph(queryUrl,
+                  "chart", minBound, maxBound);
+};
+
 </script>
 {% endblock extrascript %}
