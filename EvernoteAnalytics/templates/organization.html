@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{{ credentials }}
+{% block head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}slider/css/iThing.css"/>
+{% endblock head %}
+
+{% block bodyOptions %}
+{% endblock bodyOptions %}
+{% block body %}
+<div class="span6 offset3" style="height: 75px">
+   <br/>
+   <div id="slider"></div>
+   <br/>
+</div>
+</div>
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
+<button onClick="tagButtonClicked()">Display Tags</button>
+<button onClick="notebookButtonClicked()">Display Notebooks</button>
+<div class="row">
+  <div class="span12">
+    <div id="chart"></div>
+  </div>
+</div><br />
+
+{% endblock body %}
+{% block extrascript %}
+<script type="text/javascript" src="{{ STATIC_URL}}js/jquery-1.7.2.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jquery-ui-1.8.16.custom.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jquery.mousewheel.min.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}/slider/jQAllRangeSliders-min.js">
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi">
+</script>
+<script type="text/javascript"
+src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
+</script>
+<script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
+</script>
+<script type="text/javascript">
+var queryUrl = "{% url notebook_count_json %}";
+var minBound = {{ firstNote }};
+var maxBound = (new Date()).getTime();
+var slider = $("#slider");
+slider.dateRangeSlider({
+     bounds: {min: minBound, max: maxBound},
+     //Probably should limit this by default
+     defaultValues: {min: minBound, max: maxBound}
+});
+function eventfun(value, name){
+   //maybe just have a button that pulls the values to recompute data
+   var values = slider.dateRangeSlider("values");
+   console.log(values.min.getTime());
+   console.log(values.max.getTime());
+};
+slider.bind("valuesChanged", eventfun);
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(function(){
+   createPieChart(queryUrl,
+                  "chart", minBound, maxBound);
+   }
+);
+function dateButtonClicked(){
+   var values = slider.dateRangeSlider("values");
+   minBound = values.min.getTime();
+   maxBound = values.max.getTime();
+   createPieChart(queryUrl,
+                  "chart", minBound, maxBound);
+};
+function tagButtonClicked(){
+   queryUrl = "{% url tag_count_json %}";
+   createPieChart(queryUrl,
+                  "chart", minBound, maxBound);
+}
+function notebookButtonClicked(){
+   queryUrl = "{% url notebook_count_json %}";
+   createPieChart(queryUrl,
+                  "chart", minBound, maxBound);
+}
+</script>
+{% endblock extrascript %}

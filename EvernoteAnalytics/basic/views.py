@@ -134,6 +134,12 @@ def post_evernote_js_token(request):
     return render_to_response('evernote_js_resp.html',{},
       context_instance=RequestContext(request))
 
+def organization(request):
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('organization.html', {'firstNote': t},
+      context_instance=RequestContext(request))
+
 def usage(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp() 
