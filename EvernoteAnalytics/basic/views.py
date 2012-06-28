@@ -135,7 +135,9 @@ def post_evernote_js_token(request):
       context_instance=RequestContext(request))
 
 def usage(request):
-    return render_to_response('usage.html', {},
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('usage.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def tags(request):
@@ -145,23 +147,34 @@ def tags(request):
       context_instance=RequestContext(request))
       
 def notebooks(request):
-    return render_to_response('notebooks.html', {},
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('notebooks.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def map(request):
-    return render_to_response('map.html', {},
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('map.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def wordcloud(request):
-    return render_to_response('wordcloud.html', {},
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp() 
+    return render_to_response('wordcloud.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def notebook_count_json(request):
     if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
          eStats = EvernoteStatistics(request.user.profile)
-         date = eStats.date_from_today(month=12)
-         filt = eStats.create_date_filter(date)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
          qStats = eStats.get_quick_stats(filt)
+         if qStats is None:
+            return HttpResponse({},content_type='application/json')   
          guidToNameMap = eStats.get_guid_map(notebookNames=True)
          noteFrequency = qStats['notebookCounts']
          notebookArray = [[k,v] for k,v in noteFrequency.iteritems()]
