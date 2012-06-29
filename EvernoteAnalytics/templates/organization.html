@@ -9,20 +9,29 @@
 {% block bodyOptions %}
 {% endblock bodyOptions %}
 {% block body %}
-<div class="span6 offset3" style="height: 75px">
-   <br/>
-   <div id="slider"></div>
-   <br/>
+
+  <div class="span6 offset3" style="height: 75px">
+     <br/>
+     <div id="slider"></div>
+     <br/>
+  </div>
 </div>
-</div>
-<button onClick="dateButtonClicked()">Refresh with Dates</button>
-<button onClick="tagButtonClicked()">Display Tags</button>
-<button onClick="notebookButtonClicked()">Display Notebooks</button>
+
 <div class="row">
-  <div class="span12">
-    <div class="load" id="chart"></div>
+  <div class="span1">
+    <div class="tabbable tabs-left">
+      <ul class="nav nav-tabs">
+        <li><a href="#tags" data-toggle="tab" onClick="tagButtonClicked()">Tags</a></li>
+        <li><a href="#notebooks" data-toggle="tab" onClick="notebookButtonClicked()">Notebooks</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="span11">
+    <div id="chart"></div>
   </div>
 </div><br />
+
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
 
 {% endblock body %}
 {% block extrascript %}
