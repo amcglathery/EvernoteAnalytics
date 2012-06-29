@@ -24,15 +24,20 @@
 
 body {
     background-image: url("../amanda/grid18.png");
-    padding-top: 60px;
+    padding-top: 20px;
     padding-bottom: 40px;
     padding-right: auto;
     padding-left: auto;
     background-color: #ccccff;
 }
 
+.body {
+    background: #FFFFFF;
+    margin-top: -18px;
+}
+
 #chart {
-  height: 425px;
+  height: 500px;
 }
 
 #click {
