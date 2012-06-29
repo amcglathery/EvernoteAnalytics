@@ -14,18 +14,23 @@
    <br/>
 </div>
 </div>
-<button onClick="dateButtonClicked()">Refresh with Dates</button>
-<button onClick="hourButtonClicked()">Display by Hours</button>
-<button onClick="dayButtonClicked()">Display by Days</button>
-<button onClick="monthButtonClicked()">Display by Months</button>
 
 <div class="row">
-
-
-<div class="span12" style="background: #ffffff">
-  <div id="chart"></div>
+  <div class="span1">
+    <div class="tabbable tabs-left">
+      <ul class="nav nav-tabs">
+        <li><a href="#hours" data-toggle="tab" onClick="hourButtonClicked()">Hours</a></li>
+        <li><a href="#days" data-toggle="tab" onClick="dayButtonClicked()">Days</a></li>
+        <li><a href="#months" data-toggle="tab" onClick="monthButtonClicked()">Months</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="span11" style="background: #ffffff">
+    <div id="chart"></div>
+  </div>
 </div>
-</div>
+
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
 
 {% endblock body %}
 {% block extrascript %}
