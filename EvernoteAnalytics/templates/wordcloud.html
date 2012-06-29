@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {{ credentials }}
 {% block head %}
-<link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}slider/css/iThing.css"/>
 {% endblock head %}
 
@@ -55,7 +54,8 @@ var slider = $("#slider");
 slider.dateRangeSlider({
      bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
-     defaultValues: {min: minVal, max: maxVal}
+     defaultValues: {min: minVal, max: maxVal},
+     valueLabels: "change"
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
