@@ -1,7 +1,11 @@
-function createMapCallback(jsonUrl, iconUrl, divElement){
-  return function() {
-    $.getJSON(jsonUrl,{},
+function createMap(jsonUrl, iconUrl, divElement, startDate, endDate){
+   $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
       function(json){
+        if (json == null) {
+            //Make this look better
+            $('#'+divElement).html("No data found");
+            return;
+          }    
         var points = json['points']
         var center = [42.408, -71.120]
         var landmark = new google.maps.LatLng(center[0],center[1]);
@@ -28,17 +32,17 @@ function createMapCallback(jsonUrl, iconUrl, divElement){
              }
            })(marker,i));
          }
-      })};
+      })
 }
 
 function createBarGraph(jsonUrl, divElement, startDate, endDate){
    $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
       function(json){
-      if (json == null) {
+        if (json == null) {
             //Make this look better
             $('#'+divElement).html("No data found");
             return;
-          }    
+        }    
       var data = new google.visualization.DataTable();
       var categoryTitle = json['categoryTitle']
       data.addColumn('string', categoryTitle);
@@ -94,3 +98,13 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
           })
 }
 
+function createWordCloud(jsonUrl, divElement, startDate, endDate){
+     $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
+       function(json){
+         $("#"+divElement).tagCloud(json['words']);
+         var children = document.getElementById('tagcloud').childNodes;
+         for (var i=0; i<children.length; i=i+2){
+           children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+         }
+       });
+}

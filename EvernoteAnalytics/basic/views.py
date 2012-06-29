@@ -225,9 +225,7 @@ def day_count_json(request):
          intToDayMap = {0: "Sunday", 1: "Monday", 2: "Tuesday", 
                         3: "Wednesday", 4: "Thursday", 5: "Friday", 
                         6: "Saturday"}
-         days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-                 "Friday", "Saturday"]
-         daysArray = [[x,0] for x in days]
+         daysArray = [[x,0] for x in intToDayMap.values()]
          for (k,v) in dayFrequency.iteritems():
             daysArray[k][1] = v
          jsonText = json.dumps({'categoryCounts': daysArray,
@@ -250,10 +248,7 @@ def month_count_json(request):
                           4: "April", 5: "May", 6: "June", 
                           7: "July", 8: "August", 9: "September",
                          10: "October", 11: "November", 12: "December"}
-         months = ["January", "February", "March", "April", "May", "June",
-                   "July", "August", "September", "October", "November",
-                   "December"]
-         monthsArray = [[x,0] for x in months]
+         monthsArray = [[x,0] for x in intToMonthMap.values()]
          for (k,v) in monthFrequency.iteritems():
             monthsArray[k][1] = v
          jsonText = json.dumps({'categoryCounts': monthsArray,
@@ -262,10 +257,15 @@ def month_count_json(request):
 
 def geo_loc_json(request):
     if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
          eStats = EvernoteStatistics(request.user.profile)
-         date = eStats.date_from_today(month=12)
-         filt = eStats.create_date_filter(date)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
          noteMetadata = eStats.get_note_metadata(filt)
+         if noteMetadata is None:
+            return HttpResponse({},content_type='application/json')   
          jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
          return HttpResponse(jsonText,content_type='application/json')
 

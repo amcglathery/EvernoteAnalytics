@@ -12,9 +12,9 @@
    <br/>
    <div id="slider"></div>
    <br/>
-    <! -- PUT SLIDER HERE -->
 </div>
 </div>
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
 
 <div class="row">
  <div class="span12">
@@ -46,21 +46,33 @@ src="http://maps.google.com/maps/api/js?sensor=true">
 <script type="text/javascript" src="{{ STATIC_URL}}js/jquery.tagcloud-2.js">
 </script>
 <script type="text/javascript">
+var queryUrl = "{% url geo_loc_json %}";
+var iconUrl = "{{STATIC_URL}}amanda/evernote.jpg";
+var minVal = {{ firstNote }};
+var maxVal = (new Date()).getTime();
 var slider = $("#slider");
 slider.dateRangeSlider({
-     //Bounds should be day of first note and todays date
-     //start values should be one (?) month back
-     bounds: {min: 969681600000, max: 1340763583545},
+     bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
+     //Probably should limit this by default
+     defaultValues: {min: minVal, max: maxVal}
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
-   console.log(slider.dateRangeSlider("values"));
+   var values = slider.dateRangeSlider("values");
+   console.log(values.min.getTime());
+   console.log(values.max.getTime());
 };
 slider.bind("valuesChanged", eventfun);
-
 google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(createMapCallback("{% url geo_loc_json %}",
-"{{STATIC_URL}}amanda/evernote.jpg",
-"map_canvas"));
+google.setOnLoadCallback(function(){
+   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
+   }
+);
+function dateButtonClicked(){
+   var values = slider.dateRangeSlider("values");
+   minVal = values.min.getTime();
+   maxVal = values.max.getTime();
+   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
+};
 </script>
 {% endblock extrascript %}

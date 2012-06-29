@@ -42,13 +42,13 @@ src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 </script>
 <script type="text/javascript">
 var queryUrl = "{% url notebook_count_json %}";
-var minBound = {{ firstNote }};
-var maxBound = (new Date()).getTime();
+var minVal = {{ firstNote }};
+var maxVal = (new Date()).getTime();
 var slider = $("#slider");
 slider.dateRangeSlider({
-     bounds: {min: minBound, max: maxBound},
+     bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
-     defaultValues: {min: minBound, max: maxBound}
+     defaultValues: {min: minVal, max: maxVal}
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
@@ -59,26 +59,22 @@ function eventfun(value, name){
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(function(){
-   createPieChart(queryUrl,
-                  "chart", minBound, maxBound);
+   createPieChart(queryUrl,"chart", minVal, maxVal);
    }
 );
 function dateButtonClicked(){
    var values = slider.dateRangeSlider("values");
-   minBound = values.min.getTime();
-   maxBound = values.max.getTime();
-   createPieChart(queryUrl,
-                  "chart", minBound, maxBound);
+   minVal = values.min.getTime();
+   maxVal = values.max.getTime();
+   createPieChart(queryUrl,"chart", minVal, maxVal);
 };
 function tagButtonClicked(){
    queryUrl = "{% url tag_count_json %}";
-   createPieChart(queryUrl,
-                  "chart", minBound, maxBound);
+   createPieChart(queryUrl,"chart", minVal, maxVal);
 }
 function notebookButtonClicked(){
    queryUrl = "{% url notebook_count_json %}";
-   createPieChart(queryUrl,
-                  "chart", minBound, maxBound);
+   createPieChart(queryUrl,"chart", minVal, maxVal);
 }
 </script>
 {% endblock extrascript %}

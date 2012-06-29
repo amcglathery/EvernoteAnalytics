@@ -14,6 +14,7 @@
    <br/>
 </div>
 </div>
+<button onClick="dateButtonClicked()">Refresh with Dates</button>
 
 <div class="row">
   <div class="span12">
@@ -37,29 +38,34 @@
 <script type="text/javascript"
 src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 </script>
-<script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
-</script>
 <script type="text/javascript" src="{{ STATIC_URL}}js/jquery.tagcloud-2.js">
 </script>
+<script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
+</script>
 <script type="text/javascript">
+var queryUrl = "{% url word_count_json %}";
+var minVal = {{ firstNote }};
+var maxVal = (new Date()).getTime();
 var slider = $("#slider");
 slider.dateRangeSlider({
-     //Bounds should be day of first note and todays date
-     //start values should be one (?) month back
-     bounds: {min: 969681600000, max: 1340763583545},
+     bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
+     //Probably should limit this by default
+     defaultValues: {min: minVal, max: maxVal}
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
-   console.log(slider.dateRangeSlider("values"));
+   var values = slider.dateRangeSlider("values");
+   console.log(values.min.getTime());
+   console.log(values.max.getTime());
 };
 slider.bind("valuesChanged", eventfun);
-$.getJSON("{% url word_count_json %}",{},
-function(json){
-  $("#tagcloud").tagCloud(json['words']);
-  var children = document.getElementById('tagcloud').childNodes;
-  for (var i=0; i<children.length; i=i+2){
-    children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
-  }
-});
+
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
+function dateButtonClicked(){
+   var values = slider.dateRangeSlider("values");
+   minVal = values.min.getTime();
+   maxVal = values.max.getTime();
+   createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
+};
 </script>
 {% endblock extrascript %}
