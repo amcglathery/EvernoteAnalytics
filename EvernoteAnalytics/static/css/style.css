@@ -38,6 +38,15 @@ body {
 
 #chart {
   height: 500px;
+  border-left-style: solid;
+  border-left-color: #BBBBBB;
+  border-left-width: 1px;
+}
+
+#datebar {
+    border-bottom-style: solid;
+    border-bottom-color: #BBBBBB;
+    border-bottom-width: 1px;
 }
 
 #click {

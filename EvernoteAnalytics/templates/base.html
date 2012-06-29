@@ -63,11 +63,9 @@
     </div>
 
     <div class="body">
-      <div class="row">
-        {% block body %}
-        {{ body }}
-        {% endblock body %}
-      </div>
+      {% block body %}
+      {{ body }}
+      {% endblock body %}
     </div>
   </div>
   {% block extrascript %}
