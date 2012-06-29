@@ -9,22 +9,24 @@
 {% endblock bodyOptions %}
 {% block body %}
 <div class="row" id="datebar">
-  <div class="span6 offset3" style="height: 75px">
+  <div class="span3">
+    <h2 id="title">Most Common Words</h2>
+  </div>
+  <div class="span6"> 
      <br/>
      <div id="slider"></div>
      <br/>
   </div>
   <div class="span2">
-    <button class="btn" onClick="dateButtonClicked()">Refresh with Dates</button>
+    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
   </div>
 </div>
 
 <div class="row">
-  <div class="span12">
-    <h2>Most Common Words</h2>
+  <div class="span10 offset1">
     <div class="load" id="tagcloud" style="background: white; padding: 15px 0px"></div>
   </div>
-</div><br />
+</div>
 
 {% endblock body %}
 {% block extrascript %}

@@ -10,13 +10,13 @@
 {% block body %}
 
 <div class="row" id="datebar">
-  <div class="span6 offset3" style="height: 75px">
+  <div class="span6 offset3"> 
      <br/>
      <div id="slider"></div>
      <br/>
   </div>
   <div class="span2">
-    <button class="btn" onClick="dateButtonClicked()">Refresh with Dates</button>
+    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
   </div>
 </div>
 
@@ -32,7 +32,7 @@
   <div class="span11">
     <div class="load" id="chart"></div>
   </div>
-</div><br />
+</div>
 
 
 {% endblock body %}

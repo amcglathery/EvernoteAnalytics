@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {{ credentials }}
 {% block head %}
-<link rel="stylesheet" href="{{ STATIC_URL }}amanda/gmaps.css" type="text/css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}slider/css/iThing.css"/>
 {% endblock head %}
 
@@ -10,19 +9,21 @@
 {% block body %}
 
 <div class="row" id="datebar">
-  <div class="span6 offset3" style="height: 75px">
+  <div class="span3">
+    <h2 id="title"> Geotags of posts </h2>
+  </div>
+  <div class="span6">
      <br/>
      <div id="slider"></div>
      <br/>
   </div>
   <div class="span2">
-    <button class="btn" onClick="dateButtonClicked()">Refresh with Dates</button>
+    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
   </div>
 </div>
 
 <div class="row">
  <div class="span12">
-    <h2> Geotags of posts </h2>
     <div class="load" id="map_canvas"></div>
     <div id="loc"></div>
   </div>

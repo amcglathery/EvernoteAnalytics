@@ -12,7 +12,7 @@
 #map_canvas {
 
 	width: inherit;
-	height: 425px;
+	height: 500px;
   box-align: center;
 }
 
@@ -25,19 +25,20 @@
 body {
     background-image: url("../amanda/grid18.png");
     padding-top: 20px;
-    padding-bottom: 40px;
+    padding-bottom: 30px;
     padding-right: auto;
     padding-left: auto;
     background-color: #ccccff;
 }
 
 .body {
+    height: 576px;
     background: #FFFFFF;
     margin-top: -18px;
 }
 
 #chart {
-  height: 500px;
+  height: 505px;
   border-left-style: solid;
   border-left-color: #BBBBBB;
   border-left-width: 1px;
@@ -47,6 +48,17 @@ body {
     border-bottom-style: solid;
     border-bottom-color: #BBBBBB;
     border-bottom-width: 1px;
+    padding-bottom: 20px;
+}
+
+#refresh {
+    margin-top:18px;
+    height:32px;
+}
+
+#title {
+    margin-top:18px;
+    margin-left:12px;
 }
 
 #click {
