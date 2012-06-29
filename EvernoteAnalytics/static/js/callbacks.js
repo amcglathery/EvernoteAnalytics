@@ -5,7 +5,7 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate){
             //Make this look better
             $('#'+divElement).html("No data found");
             return;
-          }    
+          }
         var points = json['points']
         var center = [42.408, -71.120]
         var landmark = new google.maps.LatLng(center[0],center[1]);
@@ -42,7 +42,7 @@ function createBarGraph(jsonUrl, divElement, startDate, endDate){
             //Make this look better
             $('#'+divElement).html("No data found");
             return;
-        }    
+        }
       var data = new google.visualization.DataTable();
       var categoryTitle = json['categoryTitle']
       data.addColumn('string', categoryTitle);
@@ -62,7 +62,8 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
        function(json){
           if (json == null) {
             //Make this look better
-            $('#'+divElement).html("No data found");
+            $('#'+divElement).css({"background-image":"none", "text-align": "center"});
+            $('#'+divElement).html("<p style='padding-top: 20%'>No data was found for the dates you selected.</p>");
             return;
           }
           keyToDisplayMap = json['keyToDisplayMap'];
