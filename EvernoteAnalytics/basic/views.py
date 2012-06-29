@@ -103,13 +103,13 @@ def post_evernote_token(request):
           'days': ""},
          context_instance=RequestContext(request))
     numNotebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
-    
+
     notebookFrequency = qStats['notebookCounts']
     tagFrequency = qStats['tagCounts']
     notes =  "Found " + str(qStats['numberOfNotes']) + " notes"
     notebooks = "Found " + str(qStats['numberOfNotebooks']) + " notebooks:"
     tags = "Found " + str(qStats['numberOfTags']) + " tags: "
-    
+
     for (notebook, frequency) in notebookFrequency.items():
       notebooks += eStats.get_notebook_name(notebook) + ": " + str(frequency) + " * "
     for (tag, frequency) in tagFrequency.items():
@@ -118,14 +118,14 @@ def post_evernote_token(request):
     dayFrequency = eStats.get_note_creation()
     days = "Number of notes created on the following days: "
     for (day, frequency) in dayFrequency.items():
-      days += str(day) + ": " + str(frequency) + " * "  
-      
-    return render_to_response('evernote_resp.html', 
-      {'numNotebooks' : numNotebooks, 
+      days += str(day) + ": " + str(frequency) + " * "
+
+    return render_to_response('evernote_resp.html',
+      {'numNotebooks' : numNotebooks,
        'notebooks' : notebooks,
        'notes' : notes,
        'tags'  : tags,
-       'days'  : days}, 
+       'days'  : days},
       context_instance=RequestContext(request))
 
 def post_evernote_js_token(request):
@@ -136,38 +136,42 @@ def post_evernote_js_token(request):
 
 def organization(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('organization.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def usage(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('usage.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def tags(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('tags.html', {'firstNote': t},
       context_instance=RequestContext(request))
-      
+
 def notebooks(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('notebooks.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def map(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('map.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 def wordcloud(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp() 
+    t = eStats.get_first_note_timestamp()
     return render_to_response('wordcloud.html', {'firstNote': t},
+      context_instance=RequestContext(request))
+
+def aboutus(request):
+    return render_to_response('about.html', {},
       context_instance=RequestContext(request))
 
 def notebook_count_json(request):
@@ -180,11 +184,11 @@ def notebook_count_json(request):
          filt = eStats.create_date_filter(startDate, endDate)
          qStats = eStats.get_quick_stats(filt)
          if qStats is None:
-            return HttpResponse({},content_type='application/json')   
+            return HttpResponse({},content_type='application/json')
          guidToNameMap = eStats.get_guid_map(notebookNames=True)
          noteFrequency = qStats['notebookCounts']
          notebookArray = [[k,v] for k,v in noteFrequency.iteritems()]
-         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 
+         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap,
                                 'noteArray': notebookArray,
                                 'displayObjectName': 'Notebook',
                                 'evernoteSearchParam' : 'b'})
@@ -200,11 +204,11 @@ def tag_count_json(request):
          filt = eStats.create_date_filter(startDate, endDate)
          qStats = eStats.get_quick_stats(filt)
          if qStats is None:
-            return HttpResponse({},content_type='application/json')   
+            return HttpResponse({},content_type='application/json')
          guidToNameMap = eStats.get_guid_map(tagNames=True, notebookNames=False)
          tagFrequency = qStats['tagCounts']
          tagArray = [[k,v] for k,v in tagFrequency.iteritems()]
-         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap, 
+         jsonText = json.dumps({'keyToDisplayMap': guidToNameMap,
                                 'noteArray': tagArray,
                                 'displayObjectName': 'Tag',
                                 'evernoteSearchParam': 't'})
@@ -220,10 +224,10 @@ def day_count_json(request):
          filt = eStats.create_date_filter(startDate, endDate)
          noteMetadata = eStats.get_note_metadata(filt)
          if noteMetadata is None:
-            return HttpResponse({},content_type='application/json')   
+            return HttpResponse({},content_type='application/json')
          dayFrequency = noteMetadata['dayCounter']
-         intToDayMap = {0: "Sunday", 1: "Monday", 2: "Tuesday", 
-                        3: "Wednesday", 4: "Thursday", 5: "Friday", 
+         intToDayMap = {0: "Sunday", 1: "Monday", 2: "Tuesday",
+                        3: "Wednesday", 4: "Thursday", 5: "Friday",
                         6: "Saturday"}
          daysArray = [[x,0] for x in intToDayMap.values()]
          for (k,v) in dayFrequency.iteritems():
@@ -242,10 +246,10 @@ def month_count_json(request):
          filt = eStats.create_date_filter(startDate, endDate)
          noteMetadata = eStats.get_note_metadata(filt)
          if noteMetadata is None:
-            return HttpResponse({},content_type='application/json')   
+            return HttpResponse({},content_type='application/json')
          monthFrequency = noteMetadata['monthCounter']
-         intToMonthMap = {1: "January", 2: "February", 3: "March", 
-                          4: "April", 5: "May", 6: "June", 
+         intToMonthMap = {1: "January", 2: "February", 3: "March",
+                          4: "April", 5: "May", 6: "June",
                           7: "July", 8: "August", 9: "September",
                          10: "October", 11: "November", 12: "December"}
          monthsArray = [[x,0] for x in intToMonthMap.values()]
@@ -265,7 +269,7 @@ def geo_loc_json(request):
          filt = eStats.create_date_filter(startDate, endDate)
          noteMetadata = eStats.get_note_metadata(filt)
          if noteMetadata is None:
-            return HttpResponse({},content_type='application/json')   
+            return HttpResponse({},content_type='application/json')
          jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
          return HttpResponse(jsonText,content_type='application/json')
 
