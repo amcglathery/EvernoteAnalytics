@@ -7,6 +7,7 @@
 
 .hidden { visibility: hidden; }
 .unhidden { visibility: visible; }
+.load{background:url('../img/ajax-loader.gif') no-repeat center;}
 
 #map_canvas {
 
@@ -73,7 +74,7 @@ body {
 
 .boxtext {
   color: #ABBFCF;
-  
+
 }
 
 @-webkit-keyframes hide {
@@ -103,7 +104,7 @@ body {
 
 @-webkit-keyframes show {
   0% {
-     top: 0; 
+     top: 0;
   }
 	100% {
 	  top: 26%;
@@ -111,7 +112,7 @@ body {
 }
 @-moz-keyframes show {
   0% {
-    top: 0; 
+    top: 0;
   }
 	100% {
 	  top: 26%;
@@ -119,7 +120,7 @@ body {
 }
 @keyframes show {
   0% {
-     top: 0; 
+     top: 0;
   }
 	100% {
 	  top: 26%;
