@@ -54,10 +54,7 @@
             </ul>
             <ul class="nav pull-right" style="background: #006699">
               <li class="active" style="background-color: #036">
-                <a href="#">About Us</a>
-              </li>
-              <li class="active" style="background-color: #036">
-                <a href="#">Contact Us</a>
+              <a href="{% url basic.views.aboutus %}">About Us</a>
               </li>
             </ul>
           </div>
@@ -75,7 +72,7 @@
   {{ extrascript }}
   {% endblock extrascript %}
   <script>
-  $("li").click(function() {
+  $("a").click(function() {
 
      var docHeight = $(document).height();
 
