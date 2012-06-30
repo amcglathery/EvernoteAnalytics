@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.conf import settings
 from evernote_auth import EvernoteAPI
 from analytics import EvernoteStatistics
 from account.models import UserProfile
@@ -58,7 +59,7 @@ def login_evernote_token(request):
     if request.user.is_authenticated():
         user = request.user
     else:
-        evernoteHost = "sandbox.evernote.com"
+        evernoteHost = settings.EVERNOTE_HOST
         userStoreUri = "https://" + evernoteHost + "/edam/user"
         userStoreHttpClient = THttpClient.THttpClient(userStoreUri)
         userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
