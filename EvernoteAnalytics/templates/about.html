@@ -3,14 +3,16 @@
 {% block body %}
 <div class="row">
     <div class="span6">
-    <h2>About Us</h2>
-    <p><b>Evernote Analytics</b> is the product of the Tufts Spring 2012 Hackathon.</p>
-    </p>Its creators are four seniors at Tufts University, all majoring in Computer Science:
+    <h2 class="about">About Us</h2>
+    <p class="about"><b>Evernote Analytics</b> is the product of the Tufts Spring 2012 Hackathon.</p>
+    <p class="about">Its creators are four seniors at Tufts University, all majoring in Computer Science:
        Baturay Akaslan, Amanda Hay, Andrew McGlathery, and Matthew Russell. </p>
+    <h2 class="about">Contact Us</h2>
+    <p class="about">Email us at our google mail address with the name evernoteanalytics.</p>
     </div>
     <div class="span6">
-    <h2>Contact Us</h2>
-    <p>Email us at our google mail address with the name evernoteanalytics.</p>
+    <img src="{{ STATIC_URL }}/img/group.jpg" style="width: 96%; padding: 10px" />
+    <p style="padding-left: 10px">From left to right: Andrew, Amanda, Baturay, Matt</p>
     </div>
 </div>
 {% endblock body %}
