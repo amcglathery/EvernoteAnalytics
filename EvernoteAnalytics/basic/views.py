@@ -16,10 +16,6 @@ import evernote.edam.userstore.UserStore as UserStore
 import logging
 import json
 
-def landing(request):
-    return render_to_response('home.html', {},
-            context_instance=RequestContext(request))
-
 def run_evernote_auth(request):
     """ Starts the OAuth token obtaining process by obtaining the token we use
         to request the user's token
