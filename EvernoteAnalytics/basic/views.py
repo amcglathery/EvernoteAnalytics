@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -14,10 +15,6 @@ import thrift.transport.THttpClient as THttpClient
 import evernote.edam.userstore.UserStore as UserStore
 import logging
 import json
-
-def landing(request):
-    return render_to_response('home.html', {},
-            context_instance=RequestContext(request))
 
 def run_evernote_auth(request):
     """ Starts the OAuth token obtaining process by obtaining the token we use
@@ -135,36 +132,42 @@ def post_evernote_js_token(request):
     return render_to_response('evernote_js_resp.html',{},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def organization(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
     return render_to_response('organization.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def usage(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
     return render_to_response('usage.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def tags(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
     return render_to_response('tags.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def notebooks(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
     return render_to_response('notebooks.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def map(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
     return render_to_response('map.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def wordcloud(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
