@@ -141,7 +141,7 @@ class EvernoteStatistics:
       for noteMeta in noteMetaList:
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
          noteMeta.guid, False, True)
-         c = Counter(w.lower() for w in words.split() if not w in stopwords and w not in ever_stop)
+         c = Counter(w.lower() for w in words.split() if (not w in stopwords and w not in ever_stop and len(w) > 3))
          #not w in stopwords)
          d[noteMeta.guid] = c
       self.profile.last_update = datetime.today()
