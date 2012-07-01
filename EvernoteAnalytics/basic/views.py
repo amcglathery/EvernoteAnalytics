@@ -342,6 +342,10 @@ def trends_json(request):
          startDate = date.fromtimestamp(float(GET['sDate'])/1000)
          endDate = date.fromtimestamp(float(GET['eDate'])/1000)
          filt = eStats.create_date_filter(startDate, endDate)
+         if GET.has_key('tag'):
+            filt = eStats.create_guid_filter(GET['tag'],False,filt)    
+         if GET.has_key('notebook'):
+            filt = eStats.create_guid_filter(GET['notebook'],True,filt)    
          #if the time frame is across multiple years then use months
          formattedTrend = [["Date","Notes"]]
          if (endDate.year - startDate.year) > 1:
