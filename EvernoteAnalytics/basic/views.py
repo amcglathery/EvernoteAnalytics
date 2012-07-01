@@ -177,6 +177,10 @@ def wordcloud(request):
       context_instance=RequestContext(request))
 
 def aboutus(request):
+    request.user.profile.notes_word_count = None
+    request.user.profile.last_update = None
+    request.user.profile.word_cloud_done = False
+    request.user.profile.save()
     return render_to_response('about.html', {},
       context_instance=RequestContext(request))
 
@@ -281,7 +285,19 @@ def geo_loc_json(request):
 
 def word_count_json(request):
     if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
+         eStats = EvernoteStatistics(request.user.profile)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
+         wordCount = eStats.get_word_count(filt, numWords=200)
+         #what happens when no data?
+         jsonText = json.dumps({'words' : wordCount})
+         return HttpResponse(jsonText,content_type='application/json')
+
+def word_update(request):
+   if request.method == 'GET':
       eStats = EvernoteStatistics(request.user.profile)
-      wordCount = eStats.get_word_count(numWords=75)
-      jsonText = json.dumps({'words' : wordCount})
-      return HttpResponse(jsonText,content_type='application/json')
+      eStats.update_word_count()
+   return HttpResponse("",content_type='application/json') 

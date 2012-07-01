@@ -7,6 +7,7 @@
 {% block bodyOptions %}
 {% endblock bodyOptions %}
 {% block body %}
+
 <div class="row" id="datebar">
   <div class="span6 offset3">
      <br/>
@@ -51,6 +52,9 @@ src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 <script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
 </script>
 <script type="text/javascript">
+//This starts updating the word cloud
+$.getJSON("{% url word_count_update %}",{},function(json) {});
+
 var queryUrl = "{% url day_count_json %}";
 var minBound = {{ firstNote }};
 var maxBound = (new Date()).getTime();
