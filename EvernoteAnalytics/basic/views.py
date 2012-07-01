@@ -141,7 +141,12 @@ def post_evernote_js_token(request):
 def trends(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
-    return render_to_response('trends.html', {'firstNote': t},
+    notebooks = eStats.get_guid_map(notebookNames=True, tagNames=False).items()
+    tags = eStats.get_guid_map(notebookNames=False, tagNames=True).items()
+    return render_to_response('trends.html', 
+      {'firstNote': t,
+       'notebooks': notebooks,
+       'tags': tags},
       context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

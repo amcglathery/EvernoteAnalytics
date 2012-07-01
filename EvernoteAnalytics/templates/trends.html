@@ -20,8 +20,30 @@
   <div class="span1">
     <div class="tabbable tabs-left">
       <ul class="nav nav-tabs" style="height: 500px">
-  <!--      <li><a href="#notebooks" data-toggle="tab" onClick="notebookButtonClicked()">Notebooks</a></li>
-        <li><a href="#tags" data-toggle="tab" onClick="tagButtonClicked()">Tags</a></li> -->
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Notebooks
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, notebook in notebooks %}
+            <li><a href="#" data-toggle="tab" onClick="notebookClicked('{{ guid }}')" >{{ notebook }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Tags
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, tag in tags %}
+            <li><a href="#" data-toggle="tab" onClick="tagClicked('{{ guid }}')" >{{ tag }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
