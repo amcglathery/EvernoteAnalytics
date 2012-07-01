@@ -99,8 +99,12 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
           })
 }
 
-function createWordCloud(jsonUrl, divElement, startDate, endDate){
-     $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
+function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidParam){
+     var params = {sDate: startDate, eDate: endDate};
+     if (guid != null) {
+        params[guidParam] = guid;
+     }
+     $.getJSON(jsonUrl,params,
        function(json){
          if (json['words'].length == 0){
             $('#'+divElement).html("<p style='text-align: center; padding-top: 20%'>No data was found for the dates you selected.</p>");

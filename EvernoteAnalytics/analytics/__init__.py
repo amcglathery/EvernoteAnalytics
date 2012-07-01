@@ -180,7 +180,8 @@ class EvernoteStatistics:
             raise Exception("Looping")
        return notes
 
-   def create_date_filter(self, range1, range2=None, created=True):
+   def create_date_filter(self, range1, range2=None, created=True, 
+                          nf =  NoteFilter()):
        """Adds a date filter into a given note filter (or creates one)
           if only 1 range is specified then it is a since filter
           if created is true then return a created filter, 
@@ -196,7 +197,17 @@ class EvernoteStatistics:
          filt += " -" + filtertype + range2.strftime("%Y%m%d")
        nf.words = filt
        return nf
-       
+
+   def create_guid_filter(self, guid, notebook=True, nf = NoteFilter()):
+       """Adds a guid to a current filter or creates a new one. If notebook
+          is true then adds a notebook to the filter or if false, then
+          creates a tag filter """
+       if notebook:
+         nf.notebookGuid = guid
+       else:
+         nf.tagGuids = [guid]
+       return nf
+
    def date_from_today(self, day=0, week=0, month=0, year=0):
       d = (date.today() - timedelta(days=day,weeks=week)) - monthdelta(months=month + year * 12)
       return d

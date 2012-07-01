@@ -30,7 +30,7 @@
           </a>
           <ul class="dropdown-menu">
           {% for guid, notebook in notebooks %}
-            <li><a href="#" data-toggle="tab" onClick="notebookClicked({{ guid }})" >{{ notebook }}</a></li>
+            <li><a href="#" data-toggle="tab" onClick="notebookClicked('{{ guid }}')" >{{ notebook }}</a></li>
           {% endfor %}
           </ul>
         </li>
@@ -42,7 +42,7 @@
           </a>
           <ul class="dropdown-menu">
           {% for guid, tag in tags %}
-            <li><a href="#" data-toggle="tab" onClick="tagClicked({{ guid }})" >{{ tag }}</a></li>
+            <li><a href="#" data-toggle="tab" onClick="tagClicked('{{ guid }}')" >{{ tag }}</a></li>
           {% endfor %}
           </ul>
         </li>
@@ -96,6 +96,13 @@ function eventfun(value, name){
    createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 };
 slider.bind("valuesChanged", eventfun);
+
+function tagClicked(tagGuid){
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal, tagGuid, "tag");
+};
+function notebookClicked(notebookGuid){
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal, notebookGuid, "notebook");
+};
 
 createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 }
