@@ -106,8 +106,8 @@ function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
           })
 }
 
-function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, 
-                         guidParam){
+function createWordCloud(jsonUrl, divElement, startDate, endDate, clickUrl,
+                         guid, guidParam){
      var params = {sDate: startDate, eDate: endDate};
      if (guid != null) {
         params[guidParam] = guid;
@@ -118,7 +118,7 @@ function createWordCloud(jsonUrl, divElement, startDate, endDate, guid,
             $('#'+divElement).html("<p style='text-align: center; padding-top: 20%'>No data was found for the dates you selected.</p>");
             return;
          }
-         $("#"+divElement).tagCloud(json['words']);
+         $("#"+divElement).tagCloud(json['words'],{},clickUrl);
          var children = document.getElementById('tagcloud').childNodes;
          for (var i=0; i<children.length; i=i+2){
            children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);

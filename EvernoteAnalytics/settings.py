@@ -157,7 +157,6 @@ LOGGING = {
     }
 }
 
-# (from Ammar) What is this
 # Set these in settingslocal.py
 EVERNOTE_HOST = "evernote.com"
 EVERNOTE_KEY = "mrussell13"
