@@ -11,7 +11,7 @@
   <div class="span3">
     <h2 id="title">Most Common Words</h2>
   </div>
-  <div class="span6"> 
+  <div class="span6">
      <br/>
      <div id="slider"></div>
      <br/>
@@ -78,6 +78,7 @@ if("{{ user.get_profile.word_cloud_done }}" == "False"){
    $('#tagcloud').css({"background-image":"none", "text-align": "center"});
    $('#tagcloud').html("<p style='padding-top: 20%'>Your word cloud is not finished yet, check back soon!</p>");
 }else {
+$('#tagcloud').addClass('load');
 var queryUrl = "{% url word_count_json %}";
 var minVal = {{ firstNote }};
 var maxVal = (new Date()).getTime();
