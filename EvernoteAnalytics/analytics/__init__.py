@@ -129,11 +129,12 @@ class EvernoteStatistics:
       noteList = self.noteStore.findNotes(self.profile.evernote_token,
                                           nf, 0, 200).notes
       d = dict()
-      stopwords = nltk.stopwords.words('english')
+      stopwords = nltk.corpus.stopwords.words('english')
+      ever_stop = ['_en_todo_false', '_en_todo_true'] 
       for note in noteList: 
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
          note.guid, False, True)
-         c = Counter(w.lower() for w in re.findall(r"\w+", words) if not w in stopwords)
+         c = Counter(w.lower() for w in re.findall(r"\w+", words) if not w in stopwords and w not in ever_stop)
          d[note.guid] = c
       self.profile.notes_word_count = d
       self.profile.save()
