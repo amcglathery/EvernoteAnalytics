@@ -14,9 +14,6 @@
      <div id="slider"></div>
      <br/>
   </div>
-  <div class="span2">
-    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
-  </div>
 </div>
 
 <div class="row">
@@ -64,9 +61,12 @@ slider.dateRangeSlider({
 });
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
+   $("#chart").addClass('load')
+
    var values = slider.dateRangeSlider("values");
-   console.log(values.min.getTime());
-   console.log(values.max.getTime());
+   minVal = values.min.getTime();
+   maxVal = values.max.getTime();
+   createPieChart(queryUrl,"chart", minVal, maxVal);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
@@ -74,12 +74,6 @@ google.setOnLoadCallback(function(){
    createPieChart(queryUrl,"chart", minVal, maxVal);
    }
 );
-function dateButtonClicked(){
-   var values = slider.dateRangeSlider("values");
-   minVal = values.min.getTime();
-   maxVal = values.max.getTime();
-   createPieChart(queryUrl,"chart", minVal, maxVal);
-};
 function tagButtonClicked(){
    queryUrl = "{% url tag_count_json %}";
    createPieChart(queryUrl,"chart", minVal, maxVal);

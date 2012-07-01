@@ -62,8 +62,8 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
        function(json){
           if (json == null) {
             //Make this look better
-            $('#'+divElement).css({"background-image":"none", "text-align": "center"});
-            $('#'+divElement).html("<p style='padding-top: 20%'>No data was found for the dates you selected.</p>");
+            $('#'+divElement).removeClass('load')
+            $('#'+divElement).html("<p style='text-align: center; padding-top: 20%'>No data was found for the dates you selected.</p>");
             return;
           }
           keyToDisplayMap = json['keyToDisplayMap'];
@@ -102,6 +102,10 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
 function createWordCloud(jsonUrl, divElement, startDate, endDate){
      $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
        function(json){
+         if (json['words'].length == 0){
+            $('#'+divElement).html("<p style='text-align: center; padding-top: 20%'>No data was found for the dates you selected.</p>");
+            return;
+         }
          $("#"+divElement).tagCloud(json['words']);
          var children = document.getElementById('tagcloud').childNodes;
          for (var i=0; i<children.length; i=i+2){
