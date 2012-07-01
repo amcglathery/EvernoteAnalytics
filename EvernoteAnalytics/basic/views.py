@@ -264,7 +264,7 @@ def month_count_json(request):
                          10: "October", 11: "November", 12: "December"}
          monthsArray = [[x,0] for x in intToMonthMap.values()]
          for (k,v) in monthFrequency.iteritems():
-            monthsArray[k][1] = v
+            monthsArray[k-1][1] = v
          jsonText = json.dumps({'categoryCounts': monthsArray,
                                 'categoryTitle': 'Month'})
          return HttpResponse(jsonText,content_type='application/json')

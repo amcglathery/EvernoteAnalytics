@@ -16,9 +16,6 @@
      <div id="slider"></div>
      <br/>
   </div>
-  <div class="span2">
-    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
-  </div>
 </div>
 
 <div class="row">
@@ -64,18 +61,13 @@ slider.dateRangeSlider({
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
    var values = slider.dateRangeSlider("values");
-   console.log(values.min.getTime());
-   console.log(values.max.getTime());
-};
-slider.bind("valuesChanged", eventfun);
-
-createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
-function dateButtonClicked(){
-   var values = slider.dateRangeSlider("values");
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
    createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 };
+slider.bind("valuesChanged", eventfun);
+
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 }
 </script>
 {% endblock extrascript %}
