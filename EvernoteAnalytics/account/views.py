@@ -8,9 +8,7 @@ from django.template import RequestContext
 from urllib import urlencode
 
 def home_page(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('account.views.login_page', args=[]))
-    return render_to_response('home.html', {}, context_instance=RequestContext(request))
+    return HttpResponseRedirect(reverse('account.views.login_page', args=[]))
 
 def login_page(request):
     next_page = request.GET.get('next')
