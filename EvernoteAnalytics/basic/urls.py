@@ -9,4 +9,5 @@ urlpatterns = patterns( '',
      url( r'^word_json/$', word_count_json, name = 'word_count_json'),
      url( r'^month_json/$', month_count_json, name = 'month_count_json'),
      url( r'^word_count_update/$', word_update, name = 'word_count_update'),
+     url( r'^trends_json/$', trends_json, name = 'trends_json'),
 )

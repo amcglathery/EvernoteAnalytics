@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from dateutil import rrule
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -134,6 +135,13 @@ def post_evernote_js_token(request):
     """ Test view to work with JSON """
     profile = request.user.profile
     return render_to_response('evernote_js_resp.html',{},
+      context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def trends(request):
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp()
+    return render_to_response('trends.html', {'firstNote': t},
       context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -319,3 +327,30 @@ def word_update(request):
       eStats = EvernoteStatistics(request.user.profile)
       eStats.update_word_count()
    return HttpResponse("",content_type='application/json') 
+
+@login_required(login_url='/login/')
+def trends_json(request):
+   if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
+         eStats = EvernoteStatistics(request.user.profile)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
+         #if the time frame is across multiple years then use months
+         formattedTrend = [["Date","Notes"]]
+         if (endDate.year - startDate.year) > 1:
+            dateTrends = eStats.get_date_trends(True,filt)
+            for dt in rrule.rrule(rrule.MONTHLY, dtstart=startDate, 
+                                                 until=endDate):
+               formattedTrend.append([dt.strftime("%b \'%y"),
+                                     dateTrends[dt.strftime("%b \'%y")]])
+         else:
+            dateTrends = eStats.get_date_trends(False,filt)
+            for dt in rrule.rrule(rrule.DAILY, dtstart=startDate, 
+                                               until=endDate):
+               formattedTrend.append([dt.strftime("%d %b"),
+                                     dateTrends[dt.strftime("%d %b")]])
+         jsonText = json.dumps({'data': formattedTrend,
+                                'title': "Total Notes"})
+         return HttpResponse(jsonText,content_type='application/json')

@@ -116,9 +116,20 @@ class EvernoteStatistics:
           is true then the frequencies are categorized by months. If false
           then categorized by dates """
       spec = NotesMetadataResultSpec(includeCreated=True)
+      counter = defaultdict(int)
+      nf.order = 1
       noteMetaList = self.get_all_metadata(nf,spec)
-      return
-
+      for metadata in noteMetaList:
+         d = date.fromtimestamp(metadata.created/1000)
+         if byMonth:
+            counter[d.strftime("%b \'%y")] += 1
+         else:
+      #      if (d.day == 1):
+               counter[d.strftime("%d %b")] += 1
+       #     else:
+        #       counter[d.strftime("%d")] += 1
+      return counter
+   
    def get_word_count(self, nf=NoteFilter(), numWords=None):
       #Pass in a filter for the notes to return word counts for
       if not(self.profile.word_cloud_done):
