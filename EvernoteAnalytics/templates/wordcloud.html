@@ -76,7 +76,7 @@ src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 <script type="text/javascript">
 if("{{ user.get_profile.word_cloud_done }}" == "False"){
    $('#tagcloud').css({"background-image":"none", "text-align": "center"});
-   $('#tagcloud').html("<p style='padding-top: 20%'>Your word cloud is not finished yet, check back soon!</p>");
+   $('#tagcloud').html("<p style='padding-top: 20%'>Your word cloud is not finished yet, check back soon! <br/> If you are a new user or haven't logged in in a while, this may take some time</p>");
 }else {
 $('#tagcloud').addClass('load');
 var queryUrl = "{% url word_count_json %}";
@@ -106,6 +106,6 @@ createWordCloud(queryUrl, 'tagcloud', minVal, maxVal, notebookGuid, "notebook");
 };
 
 createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
-}
+};
 </script>
 {% endblock extrascript %}
