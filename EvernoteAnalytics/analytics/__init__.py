@@ -8,7 +8,7 @@ import evernote.edam.notestore.NoteStore as NoteStore
 from collections import defaultdict, Counter
 from datetime import date, timedelta, datetime
 from monthdelta import MonthDelta as monthdelta
-import re 
+import re, nltk
 
 class EvernoteStatistics:
 
@@ -134,10 +134,12 @@ class EvernoteStatistics:
       d = self.profile.notes_word_count
       if d is None:
          d = dict()
+      #stopwords = nltk.corpus.stopwords.words('english')
       for noteMeta in noteMetaList:
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
          noteMeta.guid, False, True)
-         c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
+         c = Counter(w.lower() for w in words.split() if len(w) > 3)
+         #not w in stopwords)
          d[noteMeta.guid] = c
       self.profile.last_update = datetime.today()
       self.profile.notes_word_count = d

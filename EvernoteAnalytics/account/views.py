@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.conf import settings
 from django.template import RequestContext
 from urllib import urlencode
 
@@ -14,10 +15,11 @@ def home_page(request):
 def login_page(request):
     next_page = request.GET.get('next')
     if next_page is None:
-        next_page = reverse('basic.views.landing', args=[])
+        next_page = reverse('basic.views.usage', args=[])
     if request.user.is_authenticated():
         return HttpResponseRedirect(next_page)
-    return render_to_response('login.html', { 'redirect_to': next_page},
+    return render_to_response('login.html', { 'redirect_to': next_page,
+        'evernote_key': settings.EVERNOTE_KEY},
         context_instance=RequestContext(request))
 
 def auth(request):

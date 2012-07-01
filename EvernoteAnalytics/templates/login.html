@@ -3,9 +3,9 @@
 
 <div id="box">
   <h1 style="color: white">Welcome to Evernote Analytics!</h1>
-  <p class="boxtext"> Some stuff here about what this is. To get started, please authenticate with your Evernote account.</p>  
+  <p class="boxtext"> To get started, please authenticate with your Evernote account.</p>
   <a class="btn btn-primary btn-large" href="{% url basic.views.run_evernote_auth %}" style="margin-bottom: 6px">Login with Evernote</a>
-  <p class="boxtext" style="font-size: 11px">Don't have Evernote? Register <a href="#">here</a>.</p>
+  <p class="boxtext" style="font-size: 11px">Don't have Evernote? Register <a href="https://www.evernote.com/Registration.action?code={{ evernote_key }}">here</a>.</p>
 </div>
 <div id="click"></div>
 

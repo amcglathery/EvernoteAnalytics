@@ -6,7 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url('^$', 'account.views.home_page'),
     url(r'^login/$', 'account.views.login_page' ),
-    url('^home/$', 'basic.views.landing'),
    # uncomment and comment out other post token to get original page
    # url('^post_token/$', 'basic.views.post_evernote_token'),
     url('^organization/$', 'basic.views.organization'),
