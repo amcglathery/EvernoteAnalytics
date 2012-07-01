@@ -90,16 +90,15 @@ class EvernoteStatistics:
       """ Returns a count of number of posts per weekday as well as 
           a list of the geolocations (if available). In the form
           [notetitile, latitude, longitude] """
-      noteMetadataList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-      noteFilter, 0, 200,
-      NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
-                                 includeTitle=True))
+      spec = NotesMetadataResultSpec(includeCreated=True,includeAttributes=True,
+                                     includeTitle=True)
+      noteMetaList = self.get_all_metadata(noteFilter,spec)
       dayCounter = defaultdict(int)
       monthCounter = defaultdict(int)
       hourCounter = defaultdict(int)
       geoLocations = []
 
-      for metadata in noteMetadataList.notes:
+      for metadata in noteMetaList:
          d = datetime.fromtimestamp(metadata.created/1000)
          dayCounter[d.weekday()] += 1
          monthCounter[d.month] += 1
@@ -107,63 +106,73 @@ class EvernoteStatistics:
          a = metadata.attributes
          if a.latitude is not None:
             geoLocations.append([metadata.title,a.latitude,a.longitude])
-         
       return { 'monthCounter': monthCounter, 'hourCounter': hourCounter,
                'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
    def get_word_count(self, nf=NoteFilter(), numWords=None):
-      #currently never repopulates unless user store is empty
-      if self.profile.notes_word_count is None:
-         guidToWordCount = self.update_word_count()
-      else:
-         guidToWordCount = self.profile.notes_word_count
+      #Pass in a filter for the notes to return word counts for
+      if not(self.profile.word_cloud_done):
+         raise Exception("word cloud computation not finished yet")
+      
+      noteMetaList = self.get_all_metadata(nf,NotesMetadataResultSpec())
+      guidToWordCount = self.profile.notes_word_count
       c = Counter()
-      for d in guidToWordCount.values():
-         c.update(d)
+      for noteMeta in noteMetaList:
+         c.update(guidToWordCount[noteMeta.guid])
       if numWords is None:
          return c.most_common()
       else:
          return c.most_common(numWords)
       
-   def update_word_count(self, nf=NoteFilter()):
-      noteList = self.noteStore.findNotes(self.profile.evernote_token,
-                                          nf, 0, 200).notes
-      d = dict()
-      for note in noteList: 
+   def update_word_count(self):
+      self.profile.word_cloud_done = 0
+      self.profile.save()
+      nf = NoteFilter()
+      if self.profile.last_update is not None:
+         nf.words="updated:" + self.profile.last_update.strftime("%Y%m%d")
+      noteMetaList = self.get_all_metadata(nf,NotesMetadataResultSpec())
+      d = self.profile.notes_word_count
+      if d is None:
+         d = dict()
+      for noteMeta in noteMetaList:
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
-         note.guid, False, True)
+         noteMeta.guid, False, True)
          c = Counter(w.lower() for w in re.findall(r"\w+", words) if len(w) > 3)
-         d[note.guid] = c
+         d[noteMeta.guid] = c
+      self.profile.last_update = datetime.today()
       self.profile.notes_word_count = d
+      self.profile.word_cloud_done = 1
       self.profile.save()
       return d
 
-   #Both of these helper functions are very broken
    def get_all_notes(self, notefilter):
        """ This is a helper method that will handle paginations in the data """
        noteList = self.noteStore.findNotes(self.profile.evernote_token,
                                           notefilter, 0, 50)
+       counter = 0
        notes = noteList.notes
-#       raise Exception(str(noteList.startIndex) + " " + str(len(notes)) + 
-#                        " " + str(noteList.totalNotes))
-       while noteList.totalNotes != len(notes):
+       while noteList.totalNotes > noteList.startIndex:
           noteList = self.noteStore.findNotes(self.profile.evernote_token,
-                  notefilter, noteList.startIndex + len(notes), 50)
+                  notefilter, noteList.startIndex + 50, 50)
           notes.extend(noteList.notes)
+          counter += 1
+          if (counter > 20):
+            raise Exception("Looping")
        return notes
 
-   #BROKEN
    def get_all_metadata(self, notefilter, resultSpec):
        """ helper method to handle paginations """
        noteList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
                                           notefilter, 0, 50, resultSpec)
        notes = noteList.notes
-       while noteList.totalNotes != len(notes) - 1:
-          raise Exception(str(noteList.startIndex) + " " + str(len(notes)) + 
-                        " " + str(noteList.totalNotes))
+       counter = 0
+       while noteList.totalNotes > noteList.startIndex:
           noteList = self.noteStore.findNotesMetadata(self.profile.evernote_token,
-                  notefilter, noteList.startIndex + len(notes), 50, resultSpec)
+                  notefilter, noteList.startIndex + 50, 50, resultSpec)
           notes.extend(noteList.notes)
+          counter += 1
+          if (counter > 20):
+            raise Exception("Looping")
        return notes
 
    def create_date_filter(self, range1, range2=None, created=True):
