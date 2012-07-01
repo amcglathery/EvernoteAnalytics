@@ -30,7 +30,7 @@
           </a>
           <ul class="dropdown-menu">
           {% for guid, notebook in notebooks %}
-            <li><a href="#" data-toggle="tab" onClick="notebookClicked({{ guid }})" >{{ notebook }}</a></li>
+            <li><a href="#" data-toggle="tab" onClick="notebookClicked('{{ guid }}')" >{{ notebook }}</a></li>
           {% endfor %}
           </ul>
         </li>
@@ -42,7 +42,7 @@
           </a>
           <ul class="dropdown-menu">
           {% for guid, tag in tags %}
-            <li><a href="#" data-toggle="tab" onClick="tagClicked({{ guid }})" >{{ tag }}</a></li>
+            <li><a href="#" data-toggle="tab" onClick="tagClicked('{{ guid }}')" >{{ tag }}</a></li>
           {% endfor %}
           </ul>
         </li>
@@ -76,7 +76,7 @@ src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 <script type="text/javascript">
 if("{{ user.get_profile.word_cloud_done }}" == "False"){
    $('#tagcloud').css({"background-image":"none", "text-align": "center"});
-   $('#tagcloud').html("<p style='padding-top: 20%'>Your word cloud is not finished yet, check back soon!</p>");
+   $('#tagcloud').html("<p style='padding-top: 20%'>Your word cloud is not finished yet, check back soon! <br/> If you are a new user or haven't logged in in a while, this may take some time</p>");
 }else {
 $('#tagcloud').addClass('load');
 var queryUrl = "{% url word_count_json %}";
@@ -98,7 +98,14 @@ function eventfun(value, name){
 };
 slider.bind("valuesChanged", eventfun);
 
+function tagClicked(tagGuid){
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal, tagGuid, "tag");
+};
+function notebookClicked(notebookGuid){
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal, notebookGuid, "notebook");
+};
+
 createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
-}
+};
 </script>
 {% endblock extrascript %}

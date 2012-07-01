@@ -53,6 +53,7 @@ var iconUrl = "{{STATIC_URL}}amanda/evernote.jpg";
 var minVal = {{ firstNote }};
 var maxVal = (new Date()).getTime();
 var slider = $("#slider");
+var geoMap = null;
 slider.dateRangeSlider({
      bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
@@ -60,23 +61,20 @@ slider.dateRangeSlider({
      valueLabels: "change"
 });
 function eventfun(value, name){
-   //maybe just have a button that pulls the values to recompute data
    var values = slider.dateRangeSlider("values");
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
-   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
+   
+   var curCenter = geoMap.getCenter();
+   var curZoom = geoMap.getZoom();
+   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal,
+             [curCenter['$a'],curCenter['ab']], curZoom);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(function(){
-   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
+   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
    }
 );
-function dateButtonClicked(){
-   var values = slider.dateRangeSlider("values");
-   minVal = values.min.getTime();
-   maxVal = values.max.getTime();
-   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
-};
 </script>
 {% endblock extrascript %}
