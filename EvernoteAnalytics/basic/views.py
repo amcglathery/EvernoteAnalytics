@@ -87,6 +87,7 @@ def login_evernote_token(request):
         args=[]))
 
 
+@login_required(login_url='/login/')
 def post_evernote_token(request):
     """ View that is called after a user has sucessfully received a token
         and displays information
@@ -128,6 +129,7 @@ def post_evernote_token(request):
        'days'  : days},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def post_evernote_js_token(request):
     """ Test view to work with JSON """
     profile = request.user.profile
@@ -189,6 +191,7 @@ def aboutus(request):
     return render_to_response('about.html', {},
       context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def notebook_count_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -209,6 +212,7 @@ def notebook_count_json(request):
                                 'evernoteSearchParam' : 'b'})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def tag_count_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -229,6 +233,7 @@ def tag_count_json(request):
                                 'evernoteSearchParam': 't'})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def day_count_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -251,6 +256,7 @@ def day_count_json(request):
                                 'categoryTitle': 'Day'})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def month_count_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -274,6 +280,7 @@ def month_count_json(request):
                                 'categoryTitle': 'Month'})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def geo_loc_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -288,6 +295,7 @@ def geo_loc_json(request):
          jsonText = json.dumps({'points' : noteMetadata['geoLocations']})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def word_count_json(request):
     if request.method == 'GET':
       GET = request.GET
@@ -305,6 +313,7 @@ def word_count_json(request):
          jsonText = json.dumps({'words' : wordCount})
          return HttpResponse(jsonText,content_type='application/json')
 
+@login_required(login_url='/login/')
 def word_update(request):
    if request.method == 'GET':
       eStats = EvernoteStatistics(request.user.profile)
