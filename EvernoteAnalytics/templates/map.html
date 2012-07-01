@@ -67,7 +67,7 @@ function eventfun(value, name){
    
    var curCenter = geoMap.getCenter();
    var curZoom = geoMap.getZoom();
-   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal,
+   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal,
              [curCenter['$a'],curCenter['ab']], curZoom);
 };
 slider.bind("valuesChanged", eventfun);
