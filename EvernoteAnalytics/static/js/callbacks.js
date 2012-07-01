@@ -1,4 +1,4 @@
-function createMap(jsonUrl, iconUrl, divElement, startDate, endDate, 
+function createMap(jsonUrl, iconUrl, divElement, startDate, endDate,
                    center, zoomLvl){
    if (center==null){
       center = [42.408, -71.120];
@@ -96,13 +96,8 @@ function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
             if(chart.getSelection().length == 1){
                selection = chart.getSelection()[0];
                var guid = noteArray[selection.row][0];
-<<<<<<< HEAD
-               console.log(guid);
-               var url = 'http://www.evernote.com/Home.action?#'
-=======
                //console.log(guid);
                var url = clickUrl
->>>>>>> 1a024186607a818d6b8c5066f35b1c78d5bc3e6a
                   + evernoteSearchParam + '=' + guid;
                //console.log(url);
                window.open(url);
@@ -111,7 +106,7 @@ function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
           })
 }
 
-function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, 
+function createWordCloud(jsonUrl, divElement, startDate, endDate, guid,
                          guidParam){
      var params = {sDate: startDate, eDate: endDate};
      if (guid != null) {
@@ -131,13 +126,13 @@ function createWordCloud(jsonUrl, divElement, startDate, endDate, guid,
        });
 }
 
-function createLineGraph(jsonUrl, divElement, startDate, endDate, guid, 
+function createLineGraph(jsonUrl, divElement, startDate, endDate, guid,
                          guidParam){
    var params = {sDate: startDate, eDate: endDate};
    if (guid != null) {
       params[guidParam] = guid;
    }
-   $.getJSON(jsonUrl, params, 
+   $.getJSON(jsonUrl, params,
       function(json){
          var data = google.visualization.arrayToDataTable(json['data']);
          var options = {
