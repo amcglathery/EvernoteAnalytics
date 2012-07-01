@@ -304,6 +304,10 @@ def word_count_json(request):
          startDate = date.fromtimestamp(float(GET['sDate'])/1000)
          endDate = date.fromtimestamp(float(GET['eDate'])/1000)
          filt = eStats.create_date_filter(startDate, endDate)
+         if GET.has_key('tag'):
+            filt = eStats.create_guid_filter(GET['tag'],False,filt)    
+         if GET.has_key('notebook'):
+            filt = eStats.create_guid_filter(GET['notebook'],True,filt)    
          wordCount = eStats.get_word_count(filt, numWords=200)
          #what happens when no data?
          jsonText = json.dumps({'words' : wordCount})
