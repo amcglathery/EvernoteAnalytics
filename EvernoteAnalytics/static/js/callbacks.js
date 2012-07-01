@@ -90,7 +90,7 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
                selection = chart.getSelection()[0];
                var guid = noteArray[selection.row][0];
                console.log(guid);
-               var url = 'http://sandbox.evernote.com/Home.action?#'
+               var url = 'http://www.evernote.com/Home.action?#'
                   + evernoteSearchParam + '=' + guid;
                console.log(url);
                window.open(url);
