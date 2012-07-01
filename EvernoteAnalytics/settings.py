@@ -1,5 +1,7 @@
 # Django settings for EvernoteAnalytics project.
 import os
+import nltk
+nltk.download('stopwords')
 ROOT_PATH = os.path.dirname(__file__)
 
 DEBUG = True
