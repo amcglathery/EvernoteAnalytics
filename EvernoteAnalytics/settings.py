@@ -160,11 +160,7 @@ LOGGING = {
 }
 
 # Set these in settingslocal.py
-<<<<<<< HEAD
 EVERNOTE_HOST = "www.evernote.com"
-=======
-EVERNOTE_HOST = "evernote.com"
->>>>>>> 1a024186607a818d6b8c5066f35b1c78d5bc3e6a
 EVERNOTE_KEY = "mrussell13"
 EVERNOTE_SECRET = "6712f2aeea0ea6bc"
 EVERNOTE_OAUTH_TOKEN_VALIDITY = 365 # OAuth token validity in days: 1 for dev,
