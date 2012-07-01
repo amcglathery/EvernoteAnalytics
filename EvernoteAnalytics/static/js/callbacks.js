@@ -1,5 +1,19 @@
 function createMap(jsonUrl, iconUrl, divElement, startDate, endDate, 
-                   zoomListener, centerListener, center, zoomLvl){
+                 //  zoomListener, centerListener, 
+                   center, zoomLvl){
+   if (center==null){
+      center = [42.408, -71.120];
+   }
+   if (zoomLvl==null){
+      zoomLvl = 12;
+   }
+   var landmark = new google.maps.LatLng(center[0],center[1]);
+   var myOptions = {
+         zoom: zoomLvl, // The larger the zoom number, the bigger the zoom
+         center: landmark,
+         mapTypeId: google.maps.MapTypeId.ROADMAP
+   };
+   var map = new google.maps.Map($('#'+divElement).get(0),myOptions);
    $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
       function(json){
         if (json == null) {
@@ -8,20 +22,6 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate,
             return;
           }
         var points = json['points']
-        /*
-        if (center==null){
-          center = [42.408, -71.120];
-        }
-        if (zoomLvl==null){
-          zoomLvl = 12;
-        }*/
-        var landmark = new google.maps.LatLng(center[0],center[1]);
-        var myOptions = {
-          zoom: zoomLvl, // The larger the zoom number, the bigger the zoom
-          center: landmark,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map($('#'+divElement).get(0),myOptions);
         var elephant = iconUrl;
         for (var i=0; i<points.length; i++) {
            var land = new google.maps.LatLng(points[i][1],points[i][2]);
@@ -39,13 +39,14 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate,
              }
            })(marker,i));
         }
-      google.maps.event.addListener(map, 'zoom_changed', function() {
+    /*  google.maps.event.addListener(map, 'zoom_changed', function() {
          zoomListener(map.getZoom());
       });
       google.maps.event.addListener(map, 'center_changed', function() {
          centerListener(map.getCenter());
-      });
+      });*/
    })
+   return map;
 }
 
 function createBarGraph(jsonUrl, divElement, startDate, endDate){

@@ -53,8 +53,7 @@ var iconUrl = "{{STATIC_URL}}amanda/evernote.jpg";
 var minVal = {{ firstNote }};
 var maxVal = (new Date()).getTime();
 var slider = $("#slider");
-var curCenter = null;
-var curZoom = null;
+var geoMap = null;
 slider.dateRangeSlider({
      bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
@@ -66,29 +65,16 @@ function eventfun(value, name){
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
    
-//   var center = geoMap.getCenter();
- //  var zoom = geoMap.getZoom();
-   console.log(curCenter);
-   console.log(curZoom);
+   var curCenter = geoMap.getCenter();
+   var curZoom = geoMap.getZoom();
    createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal,
-                      zoomListener, centerListener, 
-                      curCenter, curZoom);
-//[42.408, -71.120], 12);
+             [curCenter['$a'],curCenter['ab']], curZoom);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(function(){
-   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal, 
-             zoomListener, centerListener, [42.408, -71.120], 12);
+   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
    }
 );
-function centerListener(newCenter){
-  curCenter = [newCenter['$a'],newCenter['ab']];
-  console.log(curCenter);
-};
-function zoomListener(newZoom){
-   curZoom = newZoom;
-   console.log(curZoom);
-};
 </script>
 {% endblock extrascript %}
