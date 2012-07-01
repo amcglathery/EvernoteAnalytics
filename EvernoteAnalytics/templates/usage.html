@@ -14,15 +14,12 @@
      <div id="slider"></div>
      <br/>
   </div>
-  <div class="span2">
-    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
-  </div>
 </div>
 
 <div class="row">
   <div class="span1">
     <div class="tabbable tabs-left">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-tabs" style="height: 500px">
         <li><a href="#hours" data-toggle="tab" onClick="hourButtonClicked()">Hours</a></li>
         <li><a href="#days" data-toggle="tab" onClick="dayButtonClicked()">Days</a></li>
         <li><a href="#months" data-toggle="tab" onClick="monthButtonClicked()">Months</a></li>
@@ -68,8 +65,9 @@ slider.dateRangeSlider({
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
    var values = slider.dateRangeSlider("values");
-   console.log(values.min.getTime());
-   console.log(values.max.getTime());
+   minBound = values.min.getTime();
+   maxBound = values.max.getTime();
+   createBarGraph(queryUrl,"chart", minBound, maxBound);
 };
 slider.bind("valuesChanged", eventfun);
 
@@ -78,12 +76,6 @@ google.setOnLoadCallback(function(){
    createBarGraph(queryUrl,"chart", minBound, maxBound);
    }
 );
-function dateButtonClicked(){
-   var values = slider.dateRangeSlider("values");
-   minBound = values.min.getTime();
-   maxBound = values.max.getTime();
-   createBarGraph(queryUrl,"chart", minBound, maxBound);
-};
 function dayButtonClicked(){
    queryUrl = "{% url day_count_json %}";
    createBarGraph(queryUrl,

@@ -16,13 +16,40 @@
      <div id="slider"></div>
      <br/>
   </div>
-  <div class="span2">
-    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
-  </div>
 </div>
 
 <div class="row">
-  <div class="span10 offset1">
+  <div class="span1">
+    <div class="tabbable tabs-left">
+      <ul class="nav nav-tabs" style="height: 500px">
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Notebooks
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, notebook in notebooks %}
+            <li><a href="#" data-toggle="tab" onClick="notebookClicked({{ guid }})" >{{ notebook }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Tags
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, tag in tags %}
+            <li><a href="#" data-toggle="tab" onClick="tagClicked({{ guid }})" >{{ tag }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="span10">
     <div class="load" id="tagcloud" style="background: white; padding: 15px 0px"></div>
   </div>
 </div>
@@ -64,18 +91,13 @@ slider.dateRangeSlider({
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
    var values = slider.dateRangeSlider("values");
-   console.log(values.min.getTime());
-   console.log(values.max.getTime());
-};
-slider.bind("valuesChanged", eventfun);
-
-createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
-function dateButtonClicked(){
-   var values = slider.dateRangeSlider("values");
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
    createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 };
+slider.bind("valuesChanged", eventfun);
+
+createWordCloud(queryUrl, 'tagcloud', minVal, maxVal);
 }
 </script>
 {% endblock extrascript %}

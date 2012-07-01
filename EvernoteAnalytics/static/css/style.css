@@ -2,7 +2,9 @@
            color: orange;
            text-decoration:none;
            cursor: default;}
-#tagcloud {width: 460 px;}
+#tagcloud {
+    width: 460 px;
+}
 #tagcloud2 {width: 460 px;}
 
 .hidden { visibility: hidden; }
@@ -43,9 +45,6 @@ body {
 
 #chart {
   height: 505px;
-  border-left-style: solid;
-  border-left-color: #BBBBBB;
-  border-left-width: 1px;
 }
 
 #datebar {

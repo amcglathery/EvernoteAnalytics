@@ -17,9 +17,6 @@
      <div id="slider"></div>
      <br/>
   </div>
-  <div class="span2">
-    <button class="btn" id="refresh" onClick="dateButtonClicked()">Refresh with Dates</button>
-  </div>
 </div>
 
 <div class="row">
@@ -65,8 +62,9 @@ slider.dateRangeSlider({
 function eventfun(value, name){
    //maybe just have a button that pulls the values to recompute data
    var values = slider.dateRangeSlider("values");
-   console.log(values.min.getTime());
-   console.log(values.max.getTime());
+   minVal = values.min.getTime();
+   maxVal = values.max.getTime();
+   createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});

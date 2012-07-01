@@ -20,6 +20,9 @@ class EvernoteStatistics:
 
    def get_notebooks(self):
       return self.noteStore.listNotebooks(self.profile.evernote_token)
+
+   def get_tags(self):
+      return self.noteStore.listTags(self.profile.evernote_token)
  
    def get_number_of_notes(self, notebook=None):
       filt = NoteFilter()
@@ -42,7 +45,6 @@ class EvernoteStatistics:
       firstNote = self.noteStore.findNotes(self.profile.evernote_token,
          nf,0,1).notes[0]
       return firstNote.created
-         
 
    #I thought about making this a map to the objects themselves but I
    #was worried about performance and was planning on putting this into
