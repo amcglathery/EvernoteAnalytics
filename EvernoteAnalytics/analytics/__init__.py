@@ -83,8 +83,8 @@ class EvernoteStatistics:
          return None
       return {'numberOfNotes' : reduce(lambda x, y: x+y,
                 noteCounts.notebookCounts.itervalues()),
-              'numberOfNotebooks' : len(noteCounts.notebookCounts),
-              'numberOfTags' : len(noteCounts.tagCounts),
+#              'numberOfNotebooks' : len(noteCounts.notebookCounts),
+#              'numberOfTags' : len(noteCounts.tagCounts),
               'notebookCounts' : noteCounts.notebookCounts, 
               'tagCounts' : noteCounts.tagCounts}
 
@@ -111,6 +111,14 @@ class EvernoteStatistics:
       return { 'monthCounter': monthCounter, 'hourCounter': hourCounter,
                'dayCounter' : dayCounter, 'geoLocations' : geoLocations }
   
+   def get_date_trends(self, byMonth=True, nf=NoteFilter()):
+      """ Returns a list of note frequencies seperated by dates. If byMonth
+          is true then the frequencies are categorized by months. If false
+          then categorized by dates """
+      spec = NotesMetadataResultSpec(includeCreated=True)
+      noteMetaList = self.get_all_metadata(nf,spec)
+      return
+
    def get_word_count(self, nf=NoteFilter(), numWords=None):
       #Pass in a filter for the notes to return word counts for
       if not(self.profile.word_cloud_done):
