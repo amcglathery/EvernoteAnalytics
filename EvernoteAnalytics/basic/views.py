@@ -53,6 +53,8 @@ def login_evernote_token(request):
     """
     everAuth = EvernoteAPI()
     credentials = everAuth.get_user_token(request)
+    if not credentials:
+        return HttpResponseRedirect(reverse('account.views.login_page', args=[]))
     if request.user.is_authenticated():
         user = request.user
     else:
