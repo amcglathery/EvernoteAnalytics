@@ -1,4 +1,5 @@
-function createMap(jsonUrl, iconUrl, divElement, startDate, endDate){
+function createMap(jsonUrl, iconUrl, divElement, startDate, endDate, 
+                   zoomListener, centerListener, center, zoomLvl){
    $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
       function(json){
         if (json == null) {
@@ -7,10 +8,16 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate){
             return;
           }
         var points = json['points']
-        var center = [42.408, -71.120]
+        /*
+        if (center==null){
+          center = [42.408, -71.120];
+        }
+        if (zoomLvl==null){
+          zoomLvl = 12;
+        }*/
         var landmark = new google.maps.LatLng(center[0],center[1]);
         var myOptions = {
-          zoom: 12, // The larger the zoom number, the bigger the zoom
+          zoom: zoomLvl, // The larger the zoom number, the bigger the zoom
           center: landmark,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -31,8 +38,14 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate){
               statwindow.open(map, marker);
              }
            })(marker,i));
-         }
-      })
+        }
+      google.maps.event.addListener(map, 'zoom_changed', function() {
+         zoomListener(map.getZoom());
+      });
+      google.maps.event.addListener(map, 'center_changed', function() {
+         centerListener(map.getCenter());
+      });
+   })
 }
 
 function createBarGraph(jsonUrl, divElement, startDate, endDate){
