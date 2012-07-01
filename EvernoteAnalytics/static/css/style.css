@@ -9,6 +9,10 @@
 .unhidden { visibility: visible; }
 .load{background:url('../img/ajax-loader.gif') no-repeat center;}
 
+.about {
+    padding: 10px 0px 0px 10px;
+}
+
 #map_canvas {
 
 	width: inherit;
