@@ -9,6 +9,7 @@ urlpatterns = patterns('',
    # uncomment and comment out other post token to get original page
    # url('^post_token/$', 'basic.views.post_evernote_token'),
     url('^organization/$', 'basic.views.organization'),
+    url('^trends/$', 'basic.views.trends'),
     url('^usage/$', 'basic.views.usage'),
     url('^tags/$', 'basic.views.tags'),
     url('^notebooks/$', 'basic.views.notebooks'),

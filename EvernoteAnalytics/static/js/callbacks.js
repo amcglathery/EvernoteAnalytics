@@ -1,5 +1,4 @@
 function createMap(jsonUrl, iconUrl, divElement, startDate, endDate, 
-                 //  zoomListener, centerListener, 
                    center, zoomLvl){
    if (center==null){
       center = [42.408, -71.120];
@@ -39,12 +38,6 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate,
              }
            })(marker,i));
         }
-    /*  google.maps.event.addListener(map, 'zoom_changed', function() {
-         zoomListener(map.getZoom());
-      });
-      google.maps.event.addListener(map, 'center_changed', function() {
-         centerListener(map.getCenter());
-      });*/
    })
    return map;
 }
@@ -130,4 +123,17 @@ function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidPara
            children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
          }
        });
+}
+
+function createLineGraph(jsonUrl, divElement, startDate, endDate){
+   var params = {sDate: startDate, eDate: endDate};
+   $.getJSON(jsonUrl, params, 
+      function(json){
+         var data = google.visualization.arrayToDataTable(json['data']);
+         var options = {
+            title: json['title']
+         };
+         var chart = new google.visualization.LineChart($('#'+divElement).get(0));
+         chart.draw(data, options);
+      });
 }
