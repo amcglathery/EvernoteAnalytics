@@ -134,11 +134,12 @@ class EvernoteStatistics:
       d = self.profile.notes_word_count
       if d is None:
          d = dict()
-      #stopwords = nltk.corpus.stopwords.words('english')
+      stopwords = nltk.corpus.stopwords.words('english')
+      ever_stop = ['_en_todo_false', '_en_todo_true'] 
       for noteMeta in noteMetaList:
          words = self.noteStore.getNoteSearchText(self.profile.evernote_token,
          noteMeta.guid, False, True)
-         c = Counter(w.lower() for w in words.split() if len(w) > 3)
+         c = Counter(w.lower() for w in words.split() if not w in stopwords and w not in ever_stop)
          #not w in stopwords)
          d[noteMeta.guid] = c
       self.profile.last_update = datetime.today()
