@@ -153,7 +153,8 @@ def trends(request):
 def organization(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
-    return render_to_response('organization.html', {'firstNote': t},
+    return render_to_response('organization.html', 
+      {'firstNote': t, 'EVERNOTE_HOST': settings.EVERNOTE_HOST},
       context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

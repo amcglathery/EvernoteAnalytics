@@ -64,7 +64,7 @@ function createBarGraph(jsonUrl, divElement, startDate, endDate){
   });
 }
 
-function createPieChart(jsonUrl, divElement, startDate, endDate){
+function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
      $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
        function(json){
           if (json == null) {
@@ -96,10 +96,10 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
             if(chart.getSelection().length == 1){
                selection = chart.getSelection()[0];
                var guid = noteArray[selection.row][0];
-               console.log(guid);
-               var url = 'http://sandbox.evernote.com/Home.action?#'
+               //console.log(guid);
+               var url = clickUrl
                   + evernoteSearchParam + '=' + guid;
-               console.log(url);
+               //console.log(url);
                window.open(url);
             }
           });

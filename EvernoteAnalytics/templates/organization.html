@@ -55,6 +55,7 @@ var queryUrl = "{% url notebook_count_json %}";
 var minVal = {{ firstNote }};
 var maxVal = (new Date()).getTime();
 var slider = $("#slider");
+var clickUrl = 'http://{{ EVERNOTE_HOST }}/Home.action?#';
 slider.dateRangeSlider({
      bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
@@ -68,12 +69,12 @@ function eventfun(value, name){
    var values = slider.dateRangeSlider("values");
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
-   createPieChart(queryUrl,"chart", minVal, maxVal);
+   createPieChart(queryUrl,"chart", minVal, maxVal, clickUrl);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(function(){
-   createPieChart(queryUrl,"chart", minVal, maxVal);
+   createPieChart(queryUrl,"chart", minVal, maxVal, clickUrl);
    }
 );
 function tagButtonClicked(){
