@@ -106,7 +106,8 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
           })
 }
 
-function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidParam){
+function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, 
+                         guidParam){
      var params = {sDate: startDate, eDate: endDate};
      if (guid != null) {
         params[guidParam] = guid;
@@ -125,8 +126,12 @@ function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidPara
        });
 }
 
-function createLineGraph(jsonUrl, divElement, startDate, endDate){
+function createLineGraph(jsonUrl, divElement, startDate, endDate, guid, 
+                         guidParam){
    var params = {sDate: startDate, eDate: endDate};
+   if (guid != null) {
+      params[guidParam] = guid;
+   }
    $.getJSON(jsonUrl, params, 
       function(json){
          var data = google.visualization.arrayToDataTable(json['data']);

@@ -96,14 +96,11 @@ google.setOnLoadCallback(function(){
    createLineGraph(queryUrl,"chart", minVal, maxVal);
    }
 );
-/*
-function tagButtonClicked(){
-   queryUrl = "{% url tag_count_json %}";
-   createPieChart(queryUrl,"chart", minVal, maxVal);
+function tagClicked(tagGuid){
+   createLineGraph(queryUrl,"chart", minVal, maxVal, tagGuid, "tag");
 }
-function notebookButtonClicked(){
-   queryUrl = "{% url notebook_count_json %}";
-   createPieChart(queryUrl,"chart", minVal, maxVal);
-}*/
+function notebookClicked(notebookGuid){
+   createLineGraph(queryUrl,"chart", minVal, maxVal, notebookGuid, "notebook");
+}
 </script>
 {% endblock extrascript %}
