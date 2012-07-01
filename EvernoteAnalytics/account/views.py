@@ -13,7 +13,7 @@ def home_page(request):
 def login_page(request):
     next_page = request.GET.get('next')
     if next_page is None:
-        next_page = reverse('basic.views.usage', args=[])
+        next_page = reverse('basic.views.trends', args=[])
     if request.user.is_authenticated():
         return HttpResponseRedirect(next_page)
     return render_to_response('login.html', { 'redirect_to': next_page,
