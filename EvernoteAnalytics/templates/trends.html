@@ -8,13 +8,10 @@
 {% endblock bodyOptions %}
 {% block body %}
 
-<div class="row"> 
-  <div class="span3">
-    <h2 id="title"> Geotags of posts </h2>
-  </div>
-  <div class="span6">
+<div class="row">
+  <div class="span6 offset3"> 
      <br/>
-     <div id="slider"></div>
+     <div id="slider" style="margin-bottom: 18px"></div>
      <br/>
   </div>
   <div class="span12" id="datebar">
@@ -22,10 +19,41 @@
 </div>
 
 <div class="row">
- <div class="span12">
-    <div class="load" id="map_canvas"></div>
-    <div id="loc"></div>
+  <div class="span1">
+    <div class="tabbable tabs-left">
+      <ul class="nav nav-tabs" style="height: 500px">
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Notebooks
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, notebook in notebooks %}
+            <li><a href="#" data-toggle="tab" onClick="notebookClicked('{{ guid }}')" >{{ notebook }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle"
+             data-toggle="dropdown"
+             href=#>
+             Tags
+          </a>
+          <ul class="dropdown-menu">
+          {% for guid, tag in tags %}
+            <li><a href="#" data-toggle="tab" onClick="tagClicked('{{ guid }}')" >{{ tag }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
+  <div class="span11">
+    <div class="load" id="chart"></div>
+  </div>
+</div>
+
 
 {% endblock body %}
 {% block extrascript %}
@@ -42,20 +70,13 @@
 <script type="text/javascript"
 src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js">
 </script>
-<script type="text/javascript"
-src="http://maps.google.com/maps/api/js?sensor=true">
-</script>
 <script type="text/javascript" src="{{ STATIC_URL}}js/callbacks.js">
 </script>
-<script type="text/javascript" src="{{ STATIC_URL}}js/jquery.tagcloud-2.js">
-</script>
 <script type="text/javascript">
-var queryUrl = "{% url geo_loc_json %}";
-var iconUrl = "{{STATIC_URL}}amanda/evernote.jpg";
+var queryUrl = "{% url trends_json %}";
 var minVal = {{ firstNote }};
 var maxVal = (new Date()).getTime();
 var slider = $("#slider");
-var geoMap = null;
 slider.dateRangeSlider({
      bounds: {min: {{ firstNote }}, max: (new Date()).getTime()},
      //Probably should limit this by default
@@ -63,20 +84,25 @@ slider.dateRangeSlider({
      valueLabels: "change"
 });
 function eventfun(value, name){
+   //maybe just have a button that pulls the values to recompute data
+   $("#chart").addClass('load')
+
    var values = slider.dateRangeSlider("values");
    minVal = values.min.getTime();
    maxVal = values.max.getTime();
-   
-   var curCenter = geoMap.getCenter();
-   var curZoom = geoMap.getZoom();
-   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal,
-             [curCenter['$a'],curCenter['ab']], curZoom);
+   createLineGraph(queryUrl,"chart", minVal, maxVal);
 };
 slider.bind("valuesChanged", eventfun);
 google.load("visualization", "1", {packages:["corechart"]});
 google.setOnLoadCallback(function(){
-   geoMap = createMap(queryUrl, iconUrl, "map_canvas", minVal, maxVal);
+   createLineGraph(queryUrl,"chart", minVal, maxVal);
    }
 );
+function tagClicked(tagGuid){
+   createLineGraph(queryUrl,"chart", minVal, maxVal, tagGuid, "tag");
+}
+function notebookClicked(notebookGuid){
+   createLineGraph(queryUrl,"chart", minVal, maxVal, notebookGuid, "notebook");
+}
 </script>
 {% endblock extrascript %}

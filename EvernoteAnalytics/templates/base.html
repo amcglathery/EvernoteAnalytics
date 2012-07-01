@@ -36,6 +36,9 @@
                 <a href="{% url account.views.logout_page %}">Logout</a>
               </li>
               <li class="active" style="background-color: #036">
+                <a href="{% url basic.views.trends %}">Trends</a>
+              </li>
+              <li class="active" style="background-color: #036">
                 <a href="{% url basic.views.usage %}">Usage</a>
               </li>
               <li class="active" style="background-color: #036">
@@ -71,5 +74,18 @@
   {% block extrascript %}
   {{ extrascript }}
   {% endblock extrascript %}
+  <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33072574-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+  </script>
 </body>
 </html>

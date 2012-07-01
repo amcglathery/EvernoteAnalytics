@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from dateutil import rrule
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -83,7 +84,7 @@ def login_evernote_token(request):
     profile.evernote_token_expires_time = expires_time
     profile.evernote_note_store_url = credentials['edam_noteStoreUrl']
     profile.save()
-    return HttpResponseRedirect(reverse('basic.views.usage',
+    return HttpResponseRedirect(reverse('basic.views.trends',
         args=[]))
 
 
@@ -137,10 +138,23 @@ def post_evernote_js_token(request):
       context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+def trends(request):
+    eStats = EvernoteStatistics(request.user.profile)
+    t = eStats.get_first_note_timestamp()
+    notebooks = eStats.get_guid_map(notebookNames=True, tagNames=False).items()
+    tags = eStats.get_guid_map(notebookNames=False, tagNames=True).items()
+    return render_to_response('trends.html', 
+      {'firstNote': t,
+       'notebooks': notebooks,
+       'tags': tags},
+      context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 def organization(request):
     eStats = EvernoteStatistics(request.user.profile)
     t = eStats.get_first_note_timestamp()
-    return render_to_response('organization.html', {'firstNote': t},
+    return render_to_response('organization.html', 
+      {'firstNote': t, 'EVERNOTE_HOST': settings.EVERNOTE_HOST},
       context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -319,3 +333,34 @@ def word_update(request):
       eStats = EvernoteStatistics(request.user.profile)
       eStats.update_word_count()
    return HttpResponse("",content_type='application/json') 
+
+@login_required(login_url='/login/')
+def trends_json(request):
+   if request.method == 'GET':
+      GET = request.GET
+      if GET.has_key('sDate') and GET.has_key('eDate'):
+         eStats = EvernoteStatistics(request.user.profile)
+         startDate = date.fromtimestamp(float(GET['sDate'])/1000)
+         endDate = date.fromtimestamp(float(GET['eDate'])/1000)
+         filt = eStats.create_date_filter(startDate, endDate)
+         if GET.has_key('tag'):
+            filt = eStats.create_guid_filter(GET['tag'],False,filt)    
+         if GET.has_key('notebook'):
+            filt = eStats.create_guid_filter(GET['notebook'],True,filt)    
+         #if the time frame is across multiple years then use months
+         formattedTrend = [["Date","Notes"]]
+         if (endDate.year - startDate.year) > 1:
+            dateTrends = eStats.get_date_trends(True,filt)
+            for dt in rrule.rrule(rrule.MONTHLY, dtstart=startDate, 
+                                                 until=endDate):
+               formattedTrend.append([dt.strftime("%b \'%y"),
+                                     dateTrends[dt.strftime("%b \'%y")]])
+         else:
+            dateTrends = eStats.get_date_trends(False,filt)
+            for dt in rrule.rrule(rrule.DAILY, dtstart=startDate, 
+                                               until=endDate):
+               formattedTrend.append([dt.strftime("%d %b"),
+                                     dateTrends[dt.strftime("%d %b")]])
+         jsonText = json.dumps({'data': formattedTrend,
+                                'title': "Total Notes"})
+         return HttpResponse(jsonText,content_type='application/json')

@@ -1,5 +1,4 @@
 function createMap(jsonUrl, iconUrl, divElement, startDate, endDate, 
-                 //  zoomListener, centerListener, 
                    center, zoomLvl){
    if (center==null){
       center = [42.408, -71.120];
@@ -39,12 +38,6 @@ function createMap(jsonUrl, iconUrl, divElement, startDate, endDate,
              }
            })(marker,i));
         }
-    /*  google.maps.event.addListener(map, 'zoom_changed', function() {
-         zoomListener(map.getZoom());
-      });
-      google.maps.event.addListener(map, 'center_changed', function() {
-         centerListener(map.getCenter());
-      });*/
    })
    return map;
 }
@@ -71,7 +64,7 @@ function createBarGraph(jsonUrl, divElement, startDate, endDate){
   });
 }
 
-function createPieChart(jsonUrl, divElement, startDate, endDate){
+function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
      $.getJSON(jsonUrl,{sDate: startDate, eDate: endDate},
        function(json){
           if (json == null) {
@@ -103,17 +96,23 @@ function createPieChart(jsonUrl, divElement, startDate, endDate){
             if(chart.getSelection().length == 1){
                selection = chart.getSelection()[0];
                var guid = noteArray[selection.row][0];
+<<<<<<< HEAD
                console.log(guid);
                var url = 'http://www.evernote.com/Home.action?#'
+=======
+               //console.log(guid);
+               var url = clickUrl
+>>>>>>> 1a024186607a818d6b8c5066f35b1c78d5bc3e6a
                   + evernoteSearchParam + '=' + guid;
-               console.log(url);
+               //console.log(url);
                window.open(url);
             }
           });
           })
 }
 
-function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidParam){
+function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, 
+                         guidParam){
      var params = {sDate: startDate, eDate: endDate};
      if (guid != null) {
         params[guidParam] = guid;
@@ -130,4 +129,21 @@ function createWordCloud(jsonUrl, divElement, startDate, endDate, guid, guidPara
            children[i].style.color = '#'+Math.floor(Math.random()*16777215).toString(16);
          }
        });
+}
+
+function createLineGraph(jsonUrl, divElement, startDate, endDate, guid, 
+                         guidParam){
+   var params = {sDate: startDate, eDate: endDate};
+   if (guid != null) {
+      params[guidParam] = guid;
+   }
+   $.getJSON(jsonUrl, params, 
+      function(json){
+         var data = google.visualization.arrayToDataTable(json['data']);
+         var options = {
+            title: json['title']
+         };
+         var chart = new google.visualization.LineChart($('#'+divElement).get(0));
+         chart.draw(data, options);
+      });
 }
