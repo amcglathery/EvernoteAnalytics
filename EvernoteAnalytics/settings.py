@@ -1,8 +1,10 @@
 # Django settings for EvernoteAnalytics project.
 import os
+import nltk
+nltk.download('stopwords')
 ROOT_PATH = os.path.dirname(__file__)
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -14,13 +16,13 @@ ADMINS = (
 MANAGERS = ADMINS
 
 #Put database stuff in database_settings
-try: 
+try:
    from database_settings import *
 except ImportError:
    import dj_database_url
    DATABASES = {
      'default': dj_database_url.config(default='postgres://localhost')
-   } 
+   }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -164,7 +166,7 @@ EVERNOTE_SECRET = "6712f2aeea0ea6bc"
 EVERNOTE_OAUTH_TOKEN_VALIDITY = 365 # OAuth token validity in days: 1 for dev,
                                   # 365 for prod after activation
 
-try: 
+try:
    from local_settings import *
 except ImportError:
    pass
