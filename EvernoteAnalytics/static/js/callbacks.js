@@ -100,7 +100,7 @@ function createPieChart(jsonUrl, divElement, startDate, endDate, clickUrl){
                var url = clickUrl
                   + evernoteSearchParam + '=' + guid;
                //console.log(url);
-               window.open(url);
+               window.open(url, "evernotetab");
             }
           });
           })
