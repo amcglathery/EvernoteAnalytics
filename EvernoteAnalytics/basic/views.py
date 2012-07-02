@@ -193,6 +193,7 @@ def wordcloud(request):
     tags = eStats.get_guid_map(notebookNames=False, tagNames=True).items()
     return render_to_response('wordcloud.html', 
       {'firstNote': t,
+       'EVERNOTE_HOST': settings.EVERNOTE_HOST,
        'notebooks': notebooks,
        'tags': tags},
       context_instance=RequestContext(request))

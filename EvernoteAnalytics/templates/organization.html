@@ -79,11 +79,11 @@ google.setOnLoadCallback(function(){
 );
 function tagButtonClicked(){
    queryUrl = "{% url tag_count_json %}";
-   createPieChart(queryUrl,"chart", minVal, maxVal);
+   createPieChart(queryUrl,"chart", minVal, maxVal, clickUrl);
 }
 function notebookButtonClicked(){
    queryUrl = "{% url notebook_count_json %}";
-   createPieChart(queryUrl,"chart", minVal, maxVal);
+   createPieChart(queryUrl,"chart", minVal, maxVal, clickUrl);
 }
 </script>
 {% endblock extrascript %}
