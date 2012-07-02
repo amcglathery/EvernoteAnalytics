@@ -241,6 +241,8 @@ def tag_count_json(request):
             return HttpResponse({},content_type='application/json')
          guidToNameMap = eStats.get_guid_map(tagNames=True, notebookNames=False)
          tagFrequency = qStats['tagCounts']
+         if tagFrequency is None:
+            return HttpResponse({},content_type='application/json')
          tagArray = [[k,v] for k,v in tagFrequency.iteritems()]
          jsonText = json.dumps({'keyToDisplayMap': guidToNameMap,
                                 'noteArray': tagArray,
