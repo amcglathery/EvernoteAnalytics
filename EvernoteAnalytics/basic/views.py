@@ -13,6 +13,7 @@ from analytics import EvernoteStatistics
 from account.models import UserProfile
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol
 import thrift.transport.THttpClient as THttpClient
+import evernote.edam.error.ttypes as evernoteError
 import evernote.edam.userstore.UserStore as UserStore
 import logging
 import json
@@ -140,7 +141,11 @@ def post_evernote_js_token(request):
 @login_required(login_url='/login/')
 def trends(request):
     eStats = EvernoteStatistics(request.user.profile)
-    t = eStats.get_first_note_timestamp()
+    try:
+      t = eStats.get_first_note_timestamp()
+   #If we get an error while looking up a user's data send back to login
+    except evernoteError.EDAMUserException:
+      return HttpResponseRedirect(reverse('account.views.login_page', args=[]))
     notebooks = eStats.get_guid_map(notebookNames=True, tagNames=False).items()
     tags = eStats.get_guid_map(notebookNames=False, tagNames=True).items()
     return render_to_response('trends.html', 

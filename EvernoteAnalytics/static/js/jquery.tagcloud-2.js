@@ -119,7 +119,7 @@ jQuery.fn.tagCloud = function(cl, givenOptions, clickUrl) { //return this.each( 
             event.preventDefault();
             tag =  jQuery(event.target).data('tag');
             var link2 = clickUrl + tag;
-            window.open(link2);
+            window.open(link2, "evernotetab");
          });
       }
       this.append(tagEl).append(" ");
