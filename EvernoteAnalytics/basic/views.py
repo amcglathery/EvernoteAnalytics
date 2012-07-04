@@ -145,6 +145,7 @@ def trends(request):
       t = eStats.get_first_note_timestamp()
    #If we get an error while looking up a user's data send back to login
     except evernoteError.EDAMUserException:
+      logout(request)
       return HttpResponseRedirect(reverse('account.views.login_page', args=[]))
     notebooks = eStats.get_guid_map(notebookNames=True, tagNames=False).items()
     tags = eStats.get_guid_map(notebookNames=False, tagNames=True).items()
