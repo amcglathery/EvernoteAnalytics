@@ -70,7 +70,7 @@ CHANGES:
 
 //Modified by Matt Russell so that a.tag is now a[0] and a.count is a[1]
 
-jQuery.fn.tagCloud = function(cl, givenOptions) { //return this.each( function() { //like a real jQuery plugin: run on on each element
+jQuery.fn.tagCloud = function(cl, givenOptions, clickUrl) { //return this.each( function() { //like a real jQuery plugin: run on on each element
    if (!cl || !cl.length)
       return this;
 
@@ -108,7 +108,7 @@ jQuery.fn.tagCloud = function(cl, givenOptions) { //return this.each( function()
    this.empty();
    for (var i = 0; i < cl.length; ++i) {
       var tag = cl[i][0];
-      var link = "http://www.evernote.com/Home.action?#x=" + tag;
+      var link = clickUrl + tag;
       var tagEl = jQuery('<a href=' + link + ' id="tagcloudlink" style="font-size: '
                            + getNormalizedSize(cl[i][1])
                            + 'em; text-decoration:none;">' + tag + '<\/a>')
@@ -118,8 +118,8 @@ jQuery.fn.tagCloud = function(cl, givenOptions) { //return this.each( function()
          tagEl.click(function(event) {
             event.preventDefault();
             tag =  jQuery(event.target).data('tag');
-            var link2 = "http://www.evernote.com/Home.action?#x=" + tag;
-            window.open(link2);
+            var link2 = clickUrl + tag;
+            window.open(link2, "evernotetab");
          });
       }
       this.append(tagEl).append(" ");
